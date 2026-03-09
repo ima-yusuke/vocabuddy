@@ -27,20 +27,69 @@
                             </div>
 
                             <div>
-                                <label for="jp_word_1" class="block text-sm font-semibold text-primary-900 mb-2">
-                                    意味 1
+                                <label for="context" class="block text-sm font-semibold text-primary-900 mb-2">
+                                    文脈・例文（任意）
                                 </label>
-                                <input type="text" id="jp_word_1" name="meaningArray[]" placeholder="例: 偶然の幸運な発見"
-                                    class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400">
+                                <textarea id="context" placeholder="例: I found this word in a mystery novel."
+                                    class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 resize-none transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400" rows="2"></textarea>
                             </div>
 
-                            <button type="button" id="add_meaning"
-                                class="inline-flex items-center text-sm text-accent-700 hover:text-accent-800 font-semibold transition-colors">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                </svg>
-                                意味を追加
+                            <button type="button" id="autocomplete_btn"
+                                class="w-full bg-gradient-to-r from-accent-600 to-accent-700 hover:from-accent-700 hover:to-accent-800 text-white px-6 py-3 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
+                                AI で意味を補完
                             </button>
+
+                            <div id="loading_message" style="display: none;"
+                                class="bg-accent-50 border border-accent-200 rounded-xl p-4 text-accent-700 text-sm">
+                                AI が単語情報を取得しています...
+                            </div>
+
+                            <div id="preview_area" style="display: none;"
+                                class="bg-gradient-to-br from-primary-50 to-accent-50/30 rounded-xl p-6 border border-primary-200 space-y-4">
+                                <h3 class="text-lg font-bold text-primary-900 mb-4">AI 補完結果</h3>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-primary-900 mb-2">品詞</label>
+                                    <input type="text" id="part_of_speech" readonly
+                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-primary-900 mb-2">発音記号</label>
+                                    <input type="text" id="pronunciation" readonly
+                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-primary-900 mb-2">発音（カタカナ）</label>
+                                    <input type="text" id="pronunciation_katakana" readonly
+                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-primary-900 mb-2">意味</label>
+                                    <div id="meanings_container" class="space-y-2">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="manual_meanings">
+                                <div>
+                                    <label for="jp_word_1" class="block text-sm font-semibold text-primary-900 mb-2">
+                                        意味 1
+                                    </label>
+                                    <input type="text" id="jp_word_1" name="meaningArray[]" placeholder="例: 偶然の幸運な発見"
+                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400">
+                                </div>
+
+                                <button type="button" id="add_meaning"
+                                    class="inline-flex items-center text-sm text-accent-700 hover:text-accent-800 font-semibold transition-colors">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    意味を追加
+                                </button>
+                            </div>
 
                             <div>
                                 <label for="en_example" class="block text-sm font-semibold text-primary-900 mb-2">

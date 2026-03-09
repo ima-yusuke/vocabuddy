@@ -231,9 +231,15 @@
 
 <script>
     const ADD_MEANING_BTN = document.getElementById('add_meaning');
+    const AUTOCOMPLETE_BTN = document.getElementById('autocomplete_btn');
+    const LOADING_MESSAGE = document.getElementById('loading_message');
+    const PREVIEW_AREA = document.getElementById('preview_area');
+    const MANUAL_MEANINGS = document.getElementById('manual_meanings');
+    const MEANINGS_CONTAINER = document.getElementById('meanings_container');
     const form = document.getElementById('add_form');
     let count = 2;
 
+    // 意味追加ボタンのハンドラー
     ADD_MEANING_BTN.addEventListener('click', () => {
         const div = document.createElement('div');
         div.innerHTML = `
@@ -246,6 +252,143 @@
         form.insertBefore(div, ADD_MEANING_BTN);
         count++;
     });
+
+    // 補完ボタンのハンドラー
+    AUTOCOMPLETE_BTN.addEventListener('click', async () => {
+        const word = document.getElementById('word').value.trim();
+        const context = document.getElementById('context').value.trim();
+
+        if (!word) {
+            alert('英単語を入力してください');
+            return;
+        }
+
+        // UIをリセット
+        PREVIEW_AREA.style.display = 'none';
+        MANUAL_MEANINGS.style.display = 'none';
+
+        // ローディング表示
+        LOADING_MESSAGE.style.display = 'block';
+        LOADING_MESSAGE.textContent = '辞書から単語情報を取得しています...';
+        AUTOCOMPLETE_BTN.disabled = true;
+
+        try {
+            // APIリクエスト
+            const response = await fetch('/word/autocomplete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ word, context })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || '補完に失敗しました');
+            }
+
+            // AIローディングメッセージ
+            LOADING_MESSAGE.textContent = 'AI が日本語訳を生成しています...';
+
+            // 結果が返ってきたら表示
+            if (data.success) {
+                displayPreview(data.data);
+            } else {
+                throw new Error(data.message || '補完に失敗しました');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('エラーが発生しました: ' + error.message + '\n\n手動で意味を入力してください。');
+            MANUAL_MEANINGS.style.display = 'block';
+        } finally {
+            LOADING_MESSAGE.style.display = 'none';
+            AUTOCOMPLETE_BTN.disabled = false;
+        }
+    });
+
+    // プレビュー表示関数
+    function displayPreview(data) {
+        // 品詞・発音を表示
+        document.getElementById('part_of_speech').value = data.part_of_speech || '';
+        document.getElementById('pronunciation').value = data.pronunciation || '';
+        document.getElementById('pronunciation_katakana').value = data.pronunciation_katakana || '';
+
+        // 意味をクリア
+        MEANINGS_CONTAINER.innerHTML = '';
+
+        // 意味を表示（編集可能）
+        if (data.meanings && data.meanings.length > 0) {
+            data.meanings.forEach((meaning, index) => {
+                const meaningDiv = document.createElement('div');
+                meaningDiv.className = 'flex gap-2';
+                meaningDiv.innerHTML = `
+                    <input type="text" name="meaningArray[]" value="${escapeHtml(meaning)}"
+                        class="flex-1 border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white text-primary-900">
+                    ${index > 0 ? `
+                    <button type="button" onclick="this.parentElement.remove()"
+                        class="text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                    ` : ''}
+                `;
+                MEANINGS_CONTAINER.appendChild(meaningDiv);
+            });
+
+            // 意味追加ボタンを追加
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.className = 'inline-flex items-center text-sm text-accent-700 hover:text-accent-800 font-semibold transition-colors mt-2';
+            addBtn.innerHTML = `
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                意味を追加
+            `;
+            addBtn.addEventListener('click', () => {
+                const newMeaningDiv = document.createElement('div');
+                newMeaningDiv.className = 'flex gap-2';
+                newMeaningDiv.innerHTML = `
+                    <input type="text" name="meaningArray[]" placeholder="意味を入力"
+                        class="flex-1 border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white text-primary-900">
+                    <button type="button" onclick="this.parentElement.remove()"
+                        class="text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                `;
+                MEANINGS_CONTAINER.insertBefore(newMeaningDiv, addBtn);
+            });
+            MEANINGS_CONTAINER.appendChild(addBtn);
+        }
+
+        // 例文があれば表示
+        if (data.en_example) {
+            document.getElementById('en_example').value = data.en_example;
+        }
+        if (data.jp_example) {
+            document.getElementById('jp_example').value = data.jp_example;
+        }
+
+        // プレビューエリアを表示
+        PREVIEW_AREA.style.display = 'block';
+    }
+
+    // HTMLエスケープ関数
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
 
     function confirmDelete() {
         return confirm('本当にこの単語を削除しますか？');

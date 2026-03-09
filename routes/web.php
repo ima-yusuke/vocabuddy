@@ -13,6 +13,8 @@ Route::get('/', [MainController::class, 'ShowIndex'])->name('ShowIndex');
 Route::post('/update/{id}', [MainController::class, 'CheckProduct'])->name('CheckProduct');
 
 Route::post('/', [MainController::class, 'AddWord'])->name('AddWord');
+Route::get('/word/edit/{id}', [MainController::class, 'EditWord'])->name('EditWord');
+Route::patch('/word/update/{id}', [MainController::class, 'UpdateWord'])->name('UpdateWord');
 Route::delete('/', [MainController::class, 'DeleteWord'])->name('DeleteWord');
 
 Route::get('/test', [TestController::class, 'ShowTestStart'])->name('ShowTest');

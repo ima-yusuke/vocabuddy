@@ -73,6 +73,53 @@ class MainController extends Controller
         return redirect()->back();
     }
 
+    public function EditWord($id)
+    {
+        $word = Word::with('japanese')->findOrFail($id);
+        return view('edit-word', compact('word'));
+    }
+
+    public function UpdateWord(Request $request, $id)
+    {
+        // バリデーション
+        $validated = $request->validate([
+            'word' => 'required|string|max:255',
+            'part_of_speech' => 'nullable|string|max:50',
+            'pronunciation' => 'nullable|string|max:255',
+            'pronunciation_katakana' => 'nullable|string|max:255',
+            'en_example' => 'nullable|string',
+            'jp_example' => 'nullable|string',
+            'meaningArray' => 'required|array',
+            'meaningArray.*' => 'string',
+        ]);
+
+        // 単語を取得
+        $word = Word::findOrFail($id);
+
+        // 単語フィールドを更新
+        $word->word = $request->word;
+        $word->part_of_speech = $request->part_of_speech;
+        $word->pronunciation = $request->pronunciation;
+        $word->pronunciation_katakana = $request->pronunciation_katakana;
+        $word->en_example = $request->en_example;
+        $word->jp_example = $request->jp_example;
+        $word->save();
+
+        // 既存の日本語の意味を削除
+        $word->japanese()->delete();
+
+        // 新しい日本語の意味を作成
+        $meanings = $request->input('meaningArray');
+        for ($i = 0; $i < count($meanings); $i++) {
+            $japanese = new Japanese();
+            $japanese->word_id = $word->id;
+            $japanese->japanese = $meanings[$i];
+            $japanese->save();
+        }
+
+        return redirect()->route('ShowIndex')->with('success', '単語が更新されました');
+    }
+
     public function DeleteWord(Request $request)
     {
         $id = $request->id;

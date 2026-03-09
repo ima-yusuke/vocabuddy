@@ -36,6 +36,18 @@ class MainController extends Controller
 
     public function AddWord(Request $request){
 
+        // バリデーション
+        $validated = $request->validate([
+            'word' => 'required|string|max:255',
+            'en_example' => 'nullable|string',
+            'jp_example' => 'nullable|string',
+            'part_of_speech' => 'nullable|string|max:50',
+            'pronunciation' => 'nullable|string|max:255',
+            'pronunciation_katakana' => 'nullable|string|max:255',
+            'meaningArray' => 'required|array',
+            'meaningArray.*' => 'required|string',
+        ]);
+
         // フォームから送信された意味を配列として取得
         $meanings = $request->input('meaningArray');
 
@@ -44,6 +56,9 @@ class MainController extends Controller
         $word->word = $request->word;
         $word->en_example = $request->en_example;
         $word->jp_example = $request->jp_example;
+        $word->part_of_speech = $request->part_of_speech;
+        $word->pronunciation = $request->pronunciation;
+        $word->pronunciation_katakana = $request->pronunciation_katakana;
         $word->save();
 
         // Japaneseの保存

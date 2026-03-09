@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\WordAutoCompleteController;
 
 
 Route::get('/', [MainController::class, 'ShowIndex'])->name('ShowIndex');
@@ -21,6 +22,8 @@ Route::post('/test/check', [TestController::class, 'CheckAnswer'])->name('CheckA
 
 Route::get('/reply-assistant', [ReplyController::class, 'ShowReplyAssistant'])->name('ShowReplyAssistant');
 Route::post('/reply-assistant/generate', [ReplyController::class, 'GenerateReply'])->name('GenerateReply');
+
+Route::post('/word/autocomplete', [WordAutoCompleteController::class, 'autocomplete'])->name('AutocompleteWord');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

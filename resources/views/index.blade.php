@@ -177,9 +177,31 @@
                     @foreach($words as $word)
                         <div class="bg-white/80 backdrop-blur-sm border border-primary-100 rounded-2xl p-8 hover:shadow-soft-lg hover:border-accent-200 transition-all duration-300 group">
                             <div class="flex items-start justify-between mb-4">
-                                <h2 class="text-2xl font-bold text-primary-900 group-hover:text-accent-700 transition-colors">
-                                    {{$word["word"]}}
-                                </h2>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h2 class="text-2xl font-bold text-primary-900 group-hover:text-accent-700 transition-colors">
+                                            {{$word["word"]}}
+                                        </h2>
+                                        @if($word["part_of_speech"])
+                                            <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-accent-100 text-accent-700 border border-accent-200">
+                                                {{$word["part_of_speech"]}}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    @if($word["pronunciation"] || $word["pronunciation_katakana"])
+                                        <div class="flex flex-wrap items-center gap-2 text-sm text-primary-600">
+                                            @if($word["pronunciation"])
+                                                <span class="font-mono text-primary-700">{{$word["pronunciation"]}}</span>
+                                            @endif
+                                            @if($word["pronunciation_katakana"])
+                                                @if($word["pronunciation"])
+                                                    <span class="text-primary-400">|</span>
+                                                @endif
+                                                <span class="text-primary-600">{{$word["pronunciation_katakana"]}}</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
                                 @hasanyrole('membership')
                                     <form method="post" action="{{route('DeleteWord')}}" onsubmit="return confirmDelete()">
                                         @csrf

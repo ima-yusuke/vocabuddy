@@ -24,6 +24,8 @@ class WordAutoCompleteController extends Controller
         $word = $validated['word'];
         $context = $validated['context'] ?? null;
 
+        Log::info('Autocomplete request', ['word' => $word, 'has_context' => !is_null($context)]);
+
         try {
             // Step 1: Free Dictionary APIで基本情報を取得
             $dictionaryData = $this->fetchDictionaryData($word);
@@ -31,17 +33,37 @@ class WordAutoCompleteController extends Controller
             // Step 2: Gemini APIで整形
             $aiData = $this->formatWithAI($word, $context, $dictionaryData);
 
+            Log::info('Autocomplete successful', ['word' => $word]);
+
             return response()->json([
                 'success' => true,
                 'data' => $aiData
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Autocomplete error: ' . $e->getMessage());
+            Log::error('Autocomplete error', [
+                'word' => $word,
+                'has_context' => !is_null($context),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // エラーメッセージを分類
+            $errorMessage = $e->getMessage();
+            $errorType = 'general';
+
+            if (strpos($errorMessage, 'APIキーが設定されていません') !== false) {
+                $errorType = 'api_key_missing';
+            } elseif (strpos($errorMessage, 'timeout') !== false || strpos($errorMessage, 'timed out') !== false) {
+                $errorType = 'timeout';
+            } elseif (strpos($errorMessage, 'JSON') !== false || strpos($errorMessage, 'パース') !== false) {
+                $errorType = 'parse_error';
+            }
 
             return response()->json([
                 'success' => false,
-                'error' => 'エラーが発生しました: ' . $e->getMessage()
+                'error' => $errorMessage,
+                'error_type' => $errorType
             ], 500);
         }
     }
@@ -62,6 +84,8 @@ class WordAutoCompleteController extends Controller
                 if (is_array($data) && count($data) > 0) {
                     $entry = $data[0];
 
+                    Log::info('Dictionary API success', ['word' => $word]);
+
                     return [
                         'word' => $entry['word'] ?? $word,
                         'phonetics' => $entry['phonetics'] ?? [],
@@ -71,11 +95,42 @@ class WordAutoCompleteController extends Controller
             }
 
             // 404 or other errors - return null
-            Log::info("Dictionary API: Word '{$word}' not found or error occurred");
+            if ($response->status() === 404) {
+                Log::warning('Dictionary API: Word not found', ['word' => $word, 'status' => 404]);
+            } else {
+                Log::warning('Dictionary API: Unexpected response', [
+                    'word' => $word,
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+            }
             return null;
 
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::warning('Dictionary API: Network error', [
+                'word' => $word,
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            if (strpos($e->getMessage(), 'timeout') !== false || strpos($e->getMessage(), 'timed out') !== false) {
+                Log::warning('Dictionary API: Timeout', [
+                    'word' => $word,
+                    'error' => $e->getMessage()
+                ]);
+            } else {
+                Log::warning('Dictionary API: Request failed', [
+                    'word' => $word,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            return null;
         } catch (\Exception $e) {
-            Log::warning("Dictionary API exception: " . $e->getMessage());
+            Log::warning('Dictionary API: Unexpected exception', [
+                'word' => $word,
+                'error' => $e->getMessage(),
+                'type' => get_class($e)
+            ]);
             return null;
         }
     }
@@ -88,7 +143,16 @@ class WordAutoCompleteController extends Controller
         $apiKey = config('services.gemini.api_key');
 
         if (!$apiKey) {
-            throw new \Exception('Gemini API キーが設定されていません。.envファイルにGEMINI_API_KEYを追加してください。');
+            Log::error('Gemini API: API key not configured', ['word' => $word]);
+            throw new \Exception('APIキーが設定されていません');
+        }
+
+        // 辞書データがない場合の警告ログ
+        if (!$dictionaryData) {
+            Log::info('Gemini API: Proceeding without dictionary data', [
+                'word' => $word,
+                'has_context' => !is_null($context)
+            ]);
         }
 
         // プロンプト作成
@@ -112,14 +176,79 @@ class WordAutoCompleteController extends Controller
                 $result = $response->json();
                 $generatedText = $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
+                if (!$generatedText) {
+                    Log::error('Gemini API: Empty response', [
+                        'word' => $word,
+                        'response_body' => $response->body()
+                    ]);
+                    throw new \Exception('AIの応答が空でした。手動で入力してください');
+                }
+
                 // JSONを抽出してパース
                 return $this->parseAIResponse($generatedText);
             } else {
-                throw new \Exception('Gemini API request failed: ' . $response->body());
+                $statusCode = $response->status();
+                $responseBody = $response->body();
+
+                // レート制限エラー
+                if ($statusCode === 429) {
+                    Log::error('Gemini API: Rate limit exceeded', [
+                        'word' => $word,
+                        'status' => $statusCode
+                    ]);
+                    throw new \Exception('APIリクエスト数の上限に達しました。しばらく待ってから再度お試しください');
+                }
+
+                // 認証エラー
+                if ($statusCode === 401 || $statusCode === 403) {
+                    Log::error('Gemini API: Authentication failed', [
+                        'word' => $word,
+                        'status' => $statusCode
+                    ]);
+                    throw new \Exception('APIキーが無効です。設定を確認してください');
+                }
+
+                Log::error('Gemini API: Request failed', [
+                    'word' => $word,
+                    'status' => $statusCode,
+                    'body' => $responseBody
+                ]);
+                throw new \Exception('AIへのリクエストが失敗しました。もう一度お試しください');
             }
-        } catch (\Exception $e) {
-            Log::error('Gemini API error: ' . $e->getMessage());
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error('Gemini API: Network error', [
+                'word' => $word,
+                'error' => $e->getMessage()
+            ]);
+            throw new \Exception('ネットワークエラーが発生しました。接続を確認してください');
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            if (strpos($e->getMessage(), 'timeout') !== false || strpos($e->getMessage(), 'timed out') !== false) {
+                Log::error('Gemini API: Timeout', [
+                    'word' => $word,
+                    'error' => $e->getMessage()
+                ]);
+                throw new \Exception('APIリクエストがタイムアウトしました。もう一度お試しください');
+            }
+            Log::error('Gemini API: Request exception', [
+                'word' => $word,
+                'error' => $e->getMessage()
+            ]);
             throw $e;
+        } catch (\Exception $e) {
+            // 既に処理済みのエラーメッセージはそのまま投げる
+            if (strpos($e->getMessage(), 'API') !== false ||
+                strpos($e->getMessage(), 'JSON') !== false ||
+                strpos($e->getMessage(), 'パース') !== false ||
+                strpos($e->getMessage(), '意味') !== false) {
+                throw $e;
+            }
+
+            Log::error('Gemini API: Unexpected error', [
+                'word' => $word,
+                'error' => $e->getMessage(),
+                'type' => get_class($e)
+            ]);
+            throw new \Exception('予期しないエラーが発生しました: ' . $e->getMessage());
         }
     }
 
@@ -178,19 +307,40 @@ class WordAutoCompleteController extends Controller
         } elseif (preg_match('/(\{.*?\})/s', $text, $matches)) {
             $jsonText = $matches[1];
         } else {
-            throw new \Exception('JSON形式のレスポンスが見つかりませんでした');
+            Log::error('AI response parsing failed: JSON block not found', [
+                'response_text' => substr($text, 0, 500) // 最初の500文字のみログ
+            ]);
+            throw new \Exception('AIの応答を解析できませんでした。手動で入力してください');
         }
 
         $data = json_decode($jsonText, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('JSONのパースに失敗しました: ' . json_last_error_msg());
+            Log::error('AI response parsing failed: JSON decode error', [
+                'json_text' => substr($jsonText, 0, 500),
+                'error' => json_last_error_msg()
+            ]);
+            throw new \Exception('AIの応答を解析できませんでした。手動で入力してください');
         }
 
         // 必須フィールドの確認
         if (!isset($data['meanings']) || !is_array($data['meanings'])) {
-            throw new \Exception('意味(meanings)が見つかりませんでした');
+            Log::error('AI response parsing failed: Missing required field', [
+                'data_keys' => array_keys($data)
+            ]);
+            throw new \Exception('意味(meanings)が見つかりませんでした。手動で入力してください');
         }
+
+        if (empty($data['meanings'])) {
+            Log::warning('AI response contains empty meanings array');
+            throw new \Exception('意味が空でした。手動で入力してください');
+        }
+
+        Log::info('AI response parsed successfully', [
+            'has_part_of_speech' => isset($data['part_of_speech']),
+            'has_pronunciation' => isset($data['pronunciation_katakana']),
+            'meanings_count' => count($data['meanings'])
+        ]);
 
         return $data;
     }

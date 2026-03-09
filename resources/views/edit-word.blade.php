@@ -187,7 +187,39 @@
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || '補完に失敗しました');
+                // エラーの種類に応じた処理
+                const errorMessage = data.error || '補完に失敗しました';
+                const errorType = data.error_type || 'general';
+
+                console.error('Autocomplete error:', {
+                    type: errorType,
+                    message: errorMessage,
+                    status: response.status
+                });
+
+                // エラータイプに応じたメッセージ表示
+                let userMessage = errorMessage;
+                let suggestion = '';
+
+                switch (errorType) {
+                    case 'api_key_missing':
+                        suggestion = '\n\n管理者に問い合わせてください。';
+                        break;
+                    case 'timeout':
+                        suggestion = '\n\nしばらく待ってから再度お試しください。';
+                        break;
+                    case 'parse_error':
+                        suggestion = '\n\n手動で意味を入力してください。';
+                        break;
+                    default:
+                        if (!context) {
+                            suggestion = '\n\n文脈を追加すると精度が上がる場合があります。';
+                        } else {
+                            suggestion = '\n\n手動で意味を入力してください。';
+                        }
+                }
+
+                throw new Error(userMessage + suggestion);
             }
 
             // AIローディングメッセージ
@@ -197,11 +229,20 @@
             if (data.success) {
                 displayPreview(data.data);
             } else {
-                throw new Error(data.message || '補完に失敗しました');
+                throw new Error(data.error || '補完に失敗しました');
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('エラーが発生しました: ' + error.message + '\n\n手動で意味を入力してください。');
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                word: word,
+                hasContext: !!context
+            });
+
+            // エラーメッセージ表示
+            alert('エラーが発生しました: ' + error.message);
+
+            // 手動入力フォームを表示
             MANUAL_MEANINGS.style.display = 'block';
         } finally {
             LOADING_MESSAGE.style.display = 'none';

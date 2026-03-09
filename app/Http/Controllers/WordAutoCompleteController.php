@@ -51,8 +51,33 @@ class WordAutoCompleteController extends Controller
      */
     private function fetchDictionaryData(string $word): ?array
     {
-        // 次のステップで実装
-        return null;
+        try {
+            $response = Http::timeout(10)->get(
+                "https://api.dictionaryapi.dev/api/v2/entries/en/{$word}"
+            );
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (is_array($data) && count($data) > 0) {
+                    $entry = $data[0];
+
+                    return [
+                        'word' => $entry['word'] ?? $word,
+                        'phonetics' => $entry['phonetics'] ?? [],
+                        'meanings' => $entry['meanings'] ?? [],
+                    ];
+                }
+            }
+
+            // 404 or other errors - return null
+            Log::info("Dictionary API: Word '{$word}' not found or error occurred");
+            return null;
+
+        } catch (\Exception $e) {
+            Log::warning("Dictionary API exception: " . $e->getMessage());
+            return null;
+        }
     }
 
     /**

@@ -12,7 +12,6 @@ class Word extends Model
     protected $fillable = [
         'word',
         'part_of_speech',
-        'pronunciation',
         'pronunciation_katakana',
     ];
 

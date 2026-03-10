@@ -55,12 +55,6 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-primary-900 mb-2">発音記号</label>
-                                    <input type="text" id="pronunciation" readonly
-                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
-                                </div>
-
-                                <div>
                                     <label class="block text-sm font-semibold text-primary-900 mb-2">発音（カタカナ）</label>
                                     <input type="text" id="pronunciation_katakana" readonly
                                         class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
@@ -188,17 +182,9 @@
                                             </span>
                                         @endif
                                     </div>
-                                    @if($word["pronunciation"] || $word["pronunciation_katakana"])
+                                    @if($word["pronunciation_katakana"])
                                         <div class="flex flex-wrap items-center gap-2 text-sm text-primary-600">
-                                            @if($word["pronunciation"])
-                                                <span class="font-mono text-primary-700">{{$word["pronunciation"]}}</span>
-                                            @endif
-                                            @if($word["pronunciation_katakana"])
-                                                @if($word["pronunciation"])
-                                                    <span class="text-primary-400">|</span>
-                                                @endif
-                                                <span class="text-primary-600">{{$word["pronunciation_katakana"]}}</span>
-                                            @endif
+                                            <span class="text-primary-600">{{$word["pronunciation_katakana"]}}</span>
                                         </div>
                                     @endif
                                 </div>
@@ -385,7 +371,6 @@
     function displayPreview(data) {
         // 品詞・発音を表示
         document.getElementById('part_of_speech').value = data.part_of_speech || '';
-        document.getElementById('pronunciation').value = data.pronunciation || '';
         document.getElementById('pronunciation_katakana').value = data.pronunciation_katakana || '';
 
         // 意味をクリア

@@ -42,7 +42,6 @@ class MainController extends Controller
             'en_example' => 'nullable|string',
             'jp_example' => 'nullable|string',
             'part_of_speech' => 'nullable|string|max:50',
-            'pronunciation' => 'nullable|string|max:255',
             'pronunciation_katakana' => 'nullable|string|max:255',
             'meaningArray' => 'required|array',
             'meaningArray.*' => 'required|string',
@@ -57,7 +56,6 @@ class MainController extends Controller
         $word->en_example = $request->en_example;
         $word->jp_example = $request->jp_example;
         $word->part_of_speech = $request->part_of_speech;
-        $word->pronunciation = $request->pronunciation;
         $word->pronunciation_katakana = $request->pronunciation_katakana;
         $word->save();
 
@@ -85,7 +83,6 @@ class MainController extends Controller
         $validated = $request->validate([
             'word' => 'required|string|max:255',
             'part_of_speech' => 'nullable|string|max:50',
-            'pronunciation' => 'nullable|string|max:255',
             'pronunciation_katakana' => 'nullable|string|max:255',
             'en_example' => 'nullable|string',
             'jp_example' => 'nullable|string',
@@ -99,7 +96,6 @@ class MainController extends Controller
         // 単語フィールドを更新
         $word->word = $request->word;
         $word->part_of_speech = $request->part_of_speech;
-        $word->pronunciation = $request->pronunciation;
         $word->pronunciation_katakana = $request->pronunciation_katakana;
         $word->en_example = $request->en_example;
         $word->jp_example = $request->jp_example;

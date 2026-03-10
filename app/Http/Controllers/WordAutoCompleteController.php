@@ -208,6 +208,16 @@ class WordAutoCompleteController extends Controller
                     throw new \Exception('APIキーが無効です。設定を確認してください');
                 }
 
+                // サービス一時利用不可エラー
+                if ($statusCode === 503) {
+                    Log::error('Gemini API: Service unavailable', [
+                        'word' => $word,
+                        'status' => $statusCode,
+                        'body' => $responseBody
+                    ]);
+                    throw new \Exception('AIサービスが一時的に利用できません。しばらく待ってから再度お試しください');
+                }
+
                 Log::error('Gemini API: Request failed', [
                     'word' => $word,
                     'status' => $statusCode,

@@ -18,9 +18,8 @@
                         @csrf
                         @method('PATCH')
 
-                        <!-- Hidden fields for part_of_speech, pronunciation, and pronunciation_katakana -->
+                        <!-- Hidden fields for part_of_speech and pronunciation_katakana -->
                         <input type="hidden" name="part_of_speech" id="part_of_speech_hidden" value="{{$word->part_of_speech}}">
-                        <input type="hidden" name="pronunciation" id="pronunciation_hidden" value="{{$word->pronunciation}}">
                         <input type="hidden" name="pronunciation_katakana" id="pronunciation_katakana_hidden" value="{{$word->pronunciation_katakana}}">
 
                         <div>
@@ -56,12 +55,6 @@
                             <div>
                                 <label class="block text-sm font-semibold text-primary-900 mb-2">品詞</label>
                                 <input type="text" id="part_of_speech" readonly
-                                    class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-primary-900 mb-2">発音記号</label>
-                                <input type="text" id="pronunciation" readonly
                                     class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
                             </div>
 
@@ -254,12 +247,10 @@
     function displayPreview(data) {
         // 品詞・発音を表示
         document.getElementById('part_of_speech').value = data.part_of_speech || '';
-        document.getElementById('pronunciation').value = data.pronunciation || '';
         document.getElementById('pronunciation_katakana').value = data.pronunciation_katakana || '';
 
         // Hidden fieldsにも値を設定
         document.getElementById('part_of_speech_hidden').value = data.part_of_speech || '';
-        document.getElementById('pronunciation_hidden').value = data.pronunciation || '';
         document.getElementById('pronunciation_katakana_hidden').value = data.pronunciation_katakana || '';
 
         // 意味をクリア

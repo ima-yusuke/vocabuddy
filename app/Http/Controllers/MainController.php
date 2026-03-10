@@ -43,8 +43,8 @@ class MainController extends Controller
             'jp_example' => 'nullable|string',
             'part_of_speech' => 'nullable|string|max:50',
             'pronunciation_katakana' => 'nullable|string|max:255',
-            'meaningArray' => 'required|array',
-            'meaningArray.*' => 'required|string',
+            'meaningArray' => 'required|array|min:1',
+            'meaningArray.*' => 'string',
         ]);
 
         // フォームから送信された意味を配列として取得
@@ -59,12 +59,14 @@ class MainController extends Controller
         $word->pronunciation_katakana = $request->pronunciation_katakana;
         $word->save();
 
-        // Japaneseの保存
+        // Japaneseの保存（空の意味はスキップ）
         for ($i = 0; $i < count($meanings); $i++) {
-            $japanese = new Japanese();
-            $japanese->word_id = $word->id;
-            $japanese->japanese = $meanings[$i];
-            $japanese->save();
+            if (!empty(trim($meanings[$i]))) {
+                $japanese = new Japanese();
+                $japanese->word_id = $word->id;
+                $japanese->japanese = trim($meanings[$i]);
+                $japanese->save();
+            }
         }
 
 
@@ -86,7 +88,7 @@ class MainController extends Controller
             'pronunciation_katakana' => 'nullable|string|max:255',
             'en_example' => 'nullable|string',
             'jp_example' => 'nullable|string',
-            'meaningArray' => 'required|array',
+            'meaningArray' => 'required|array|min:1',
             'meaningArray.*' => 'string',
         ]);
 
@@ -104,13 +106,15 @@ class MainController extends Controller
         // 既存の日本語の意味を削除
         $word->japanese()->delete();
 
-        // 新しい日本語の意味を作成
+        // 新しい日本語の意味を作成（空の意味はスキップ）
         $meanings = $request->input('meaningArray');
         for ($i = 0; $i < count($meanings); $i++) {
-            $japanese = new Japanese();
-            $japanese->word_id = $word->id;
-            $japanese->japanese = $meanings[$i];
-            $japanese->save();
+            if (!empty(trim($meanings[$i]))) {
+                $japanese = new Japanese();
+                $japanese->word_id = $word->id;
+                $japanese->japanese = trim($meanings[$i]);
+                $japanese->save();
+            }
         }
 
         return redirect()->route('ShowIndex')->with('success', '単語が更新されました');

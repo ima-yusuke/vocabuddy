@@ -18,6 +18,10 @@
 
                         <form method="post" action="{{route('AddWord')}}" class="space-y-6" id="add_form">
                             @csrf
+                            <!-- Hidden fields for autocomplete data -->
+                            <input type="hidden" name="part_of_speech" id="part_of_speech_hidden" value="">
+                            <input type="hidden" name="pronunciation_katakana" id="pronunciation_katakana_hidden" value="">
+
                             <div>
                                 <label for="word" class="block text-sm font-semibold text-primary-900 mb-2">
                                     英単語
@@ -372,6 +376,10 @@
         // 品詞・発音を表示
         document.getElementById('part_of_speech').value = data.part_of_speech || '';
         document.getElementById('pronunciation_katakana').value = data.pronunciation_katakana || '';
+
+        // Hidden fieldsにも値を設定
+        document.getElementById('part_of_speech_hidden').value = data.part_of_speech || '';
+        document.getElementById('pronunciation_katakana_hidden').value = data.pronunciation_katakana || '';
 
         // 意味をクリア
         MEANINGS_CONTAINER.innerHTML = '';

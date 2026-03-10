@@ -44,7 +44,7 @@ class MainController extends Controller
             'part_of_speech' => 'nullable|string|max:50',
             'pronunciation_katakana' => 'nullable|string|max:255',
             'meaningArray' => 'required|array|min:1',
-            'meaningArray.*' => 'string',
+            'meaningArray.*' => 'nullable|string',
         ]);
 
         // フォームから送信された意味を配列として取得
@@ -89,7 +89,7 @@ class MainController extends Controller
             'en_example' => 'nullable|string',
             'jp_example' => 'nullable|string',
             'meaningArray' => 'required|array|min:1',
-            'meaningArray.*' => 'string',
+            'meaningArray.*' => 'nullable|string',
         ]);
 
         // 単語を取得

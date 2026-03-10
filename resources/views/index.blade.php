@@ -191,24 +191,18 @@
                 <div class="space-y-5">
                     @foreach($words as $word)
                         <div class="bg-white/80 backdrop-blur-sm border border-primary-100 rounded-2xl p-8 hover:shadow-soft-lg hover:border-accent-200 transition-all duration-300 group">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-2">
-                                        <h2 class="text-2xl font-bold text-primary-900 group-hover:text-accent-700 transition-colors">
-                                            {{$word["word"]}}
-                                        </h2>
-                                        @if($word["part_of_speech"])
-                                            <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-accent-100 text-accent-700 border border-accent-200">
-                                                {{$word["part_of_speech"]}}
-                                            </span>
-                                        @endif
-                                    </div>
-                                    @if($word["pronunciation_katakana"])
-                                        <div class="flex flex-wrap items-center gap-2 text-sm text-primary-600">
-                                            <span class="text-primary-600">{{$word["pronunciation_katakana"]}}</span>
-                                        </div>
+                            <!-- 一番上の行: 品詞タグ（左）と編集・削除ボタン（右） -->
+                            <div class="flex items-center justify-between mb-3">
+                                <!-- 品詞タグ -->
+                                <div>
+                                    @if($word["part_of_speech"])
+                                        <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-accent-100 text-accent-700 border border-accent-200">
+                                            {{$word["part_of_speech"]}}
+                                        </span>
                                     @endif
                                 </div>
+
+                                <!-- 編集・削除ボタン -->
                                 @hasanyrole('membership')
                                     <div class="flex gap-2">
                                         <a href="{{ route('EditWord', $word['id']) }}"
@@ -233,6 +227,20 @@
                                     </div>
                                 @endhasanyrole
                             </div>
+
+                            <!-- 単語 -->
+                            <div class="mb-2">
+                                <h2 class="text-2xl font-bold text-primary-900 group-hover:text-accent-700 transition-colors">
+                                    {{$word["word"]}}
+                                </h2>
+                            </div>
+
+                            <!-- カタカナ読み -->
+                            @if($word["pronunciation_katakana"])
+                                <div class="flex flex-wrap items-center gap-2 text-sm text-primary-600 mb-4">
+                                    <span class="text-primary-600">{{$word["pronunciation_katakana"]}}</span>
+                                </div>
+                            @endif
 
                             <div class="border-t border-primary-100 pt-4 mb-5">
                                 <div class="space-y-2">

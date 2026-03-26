@@ -103,32 +103,7 @@
 </head>
 <body class="antialiased">
     <x-side-menu></x-side-menu>
-    <!-- ナビゲーション -->
-    <nav class="fixed w-full bg-white border-b border-gray-200 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold text-black">VocaBuddy</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-sm font-medium text-gray-700 hover:text-black transition">機能</a>
-                    <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-black transition">料金</a>
-                    @guest
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-black transition">ログイン</a>
-                        <a href="{{ route('register') }}" class="btn-primary px-6 py-2 rounded-full text-sm font-medium">
-                            無料で始める
-                        </a>
-                    @else
-                        <a href="{{ route('words.index') }}" class="text-sm font-medium text-gray-700 hover:text-black transition">単語帳</a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-sm font-medium text-gray-700 hover:text-black transition">ログアウト</button>
-                        </form>
-                    @endguest
-                </div>
-            </div>
-        </div>
-    </nav>
+    <x-navigation></x-navigation>
 
     <!-- ヒーローセクション -->
     <section class="pt-32 pb-20 md:pt-40 md:pb-32 bg-yellow">

@@ -12,22 +12,26 @@ class MainController extends Controller
 
     public function ShowIndex(Request $request){
         $search = $request->input('search');
+        $userId = auth()->id();
 
         if ($search) {
-            // 英単語または日本語の意味で検索
+            // 英単語または日本語の意味で検索（ログイン中のユーザーの単語のみ）
             $words = Word::with('japanese')
-                ->where('word', 'like', '%' . $search . '%')
-                ->orWhere('en_example', 'like', '%' . $search . '%')
-                ->orWhere('jp_example', 'like', '%' . $search . '%')
-                ->orWhereHas('japanese', function($query) use ($search) {
-                    $query->where('japanese', 'like', '%' . $search . '%');
+                ->where('user_id', $userId)
+                ->where(function($query) use ($search) {
+                    $query->where('word', 'like', '%' . $search . '%')
+                          ->orWhere('en_example', 'like', '%' . $search . '%')
+                          ->orWhere('jp_example', 'like', '%' . $search . '%')
+                          ->orWhereHas('japanese', function($q) use ($search) {
+                              $q->where('japanese', 'like', '%' . $search . '%');
+                          });
                 })
                 ->get();
 
-            // 総単語数を取得
-            $totalCount = Word::count();
+            // 総単語数を取得（ログイン中のユーザーのみ）
+            $totalCount = Word::where('user_id', $userId)->count();
         } else {
-            $words = Word::with('japanese')->get();
+            $words = Word::with('japanese')->where('user_id', $userId)->get();
             $totalCount = $words->count();
         }
 
@@ -52,6 +56,7 @@ class MainController extends Controller
 
         // データベースにデータを保存する
         $word = new Word();
+        $word->user_id = auth()->id(); // ログイン中のユーザーIDを設定
         $word->word = $request->word;
         $word->en_example = $request->en_example;
         $word->jp_example = $request->jp_example;

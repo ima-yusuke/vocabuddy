@@ -47,6 +47,14 @@ class User extends Authenticatable
     }
 
     /**
+     * ユーザーの単語
+     */
+    public function words()
+    {
+        return $this->hasMany(Word::class);
+    }
+
+    /**
      * 返信テンプレートとのリレーション
      */
     public function replyTemplates()

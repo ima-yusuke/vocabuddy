@@ -61,8 +61,11 @@
                             </button>
 
                             <div id="loading_message" style="display: none;"
-                                class="bg-[#ffeb54]/10 border border-black rounded-xl p-4 text-black text-sm">
-                                AI が単語情報を取得しています...
+                                class="bg-[#ffeb54]/10 border-2 border-black rounded-xl p-6 text-center">
+                                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
+                                    <div class="w-8 h-8 border-4 border-[#ffeb54] border-t-black rounded-full animate-spin"></div>
+                                </div>
+                                <p id="loading_text" class="text-black font-semibold text-sm">AI が単語情報を取得しています...</p>
                             </div>
 
                             <div id="preview_area" style="display: none;"
@@ -272,6 +275,7 @@
     const ADD_MEANING_BTN = document.getElementById('add_meaning');
     const AUTOCOMPLETE_BTN = document.getElementById('autocomplete_btn');
     const LOADING_MESSAGE = document.getElementById('loading_message');
+    const LOADING_TEXT = document.getElementById('loading_text');
     const PREVIEW_AREA = document.getElementById('preview_area');
     const MANUAL_MEANINGS = document.getElementById('manual_meanings');
     const MEANINGS_CONTAINER = document.getElementById('meanings_container');
@@ -308,7 +312,7 @@
 
         // ローディング表示
         LOADING_MESSAGE.style.display = 'block';
-        LOADING_MESSAGE.textContent = '辞書から単語情報を取得しています...';
+        LOADING_TEXT.textContent = '辞書から単語情報を取得しています...';
         AUTOCOMPLETE_BTN.disabled = true;
 
         try {
@@ -361,7 +365,7 @@
             }
 
             // AIローディングメッセージ
-            LOADING_MESSAGE.textContent = 'AI が日本語訳を生成しています...';
+            LOADING_TEXT.textContent = 'AI が日本語訳を生成しています...';
 
             // 結果が返ってきたら表示
             if (data.success) {
@@ -409,14 +413,12 @@
                 meaningDiv.innerHTML = `
                     <input type="text" name="meaningArray[]" value="${escapeHtml(meaning)}"
                         class="flex-1 border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white text-black">
-                    ${index > 0 ? `
                     <button type="button" onclick="this.parentElement.remove()"
                         class="text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
                     </button>
-                    ` : ''}
                 `;
                 MEANINGS_CONTAINER.appendChild(meaningDiv);
             });

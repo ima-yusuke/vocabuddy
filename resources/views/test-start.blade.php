@@ -74,7 +74,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" id="startButton"
+                        <button type="button" id="startButton"
                             class="w-full bg-black hover:bg-[#1A1A1A] text-white px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
                             テストを開始
                         </button>
@@ -119,16 +119,60 @@
     </div>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function() {
+        document.getElementById('startButton').addEventListener('click', async function() {
             // ボタンを無効化
-            document.getElementById('startButton').disabled = true;
-            document.getElementById('startButton').classList.add('opacity-50', 'cursor-not-allowed');
+            const startButton = document.getElementById('startButton');
+            startButton.disabled = true;
+            startButton.classList.add('opacity-50', 'cursor-not-allowed');
 
-            // ローディング表示
-            document.getElementById('loadingIndicator').classList.remove('hidden');
+            // フルスクリーンローディングオーバーレイを動的に作成
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'fullscreenLoading';
+            loadingOverlay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 99999; display: flex; align-items: center; justify-content: center;';
+            loadingOverlay.innerHTML = `
+                <div style="background-color: white; border: 2px solid black; border-radius: 1rem; padding: 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 9999px; background-color: #ffeb54; margin-bottom: 1rem;">
+                        <div style="width: 2.5rem; height: 2.5rem; border: 4px solid white; border-top-color: black; border-radius: 9999px; animation: spin 1s linear infinite;"></div>
+                    </div>
+                    <p style="color: black; font-weight: bold; font-size: 1.125rem; margin-bottom: 0.5rem;">問題を生成中です</p>
+                    <p style="color: #6b7280; font-size: 0.875rem;">少々お待ちください（10-20秒程度）</p>
+                </div>
+            `;
 
-            // フォーム送信を続行
-            return true;
+            // スピンアニメーション用のstyleタグを追加
+            if (!document.querySelector('#spin-animation')) {
+                const style = document.createElement('style');
+                style.id = 'spin-animation';
+                style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(loadingOverlay);
+
+            // 問題数を取得
+            const count = document.querySelector('input[name="count"]:checked').value;
+
+            try {
+                // AJAXでテスト開始リクエスト（サーバー側で問題生成完了まで待つ）
+                const response = await fetch(`{{ route('StartTest') }}?count=${count}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    redirect: 'manual' // リダイレクトを手動で処理
+                });
+
+                // 成功したら問題ページに遷移
+                window.location.href = '{{ route("ShowQuestion") }}';
+
+            } catch (error) {
+                console.error('Test start error:', error);
+                alert('テストの開始に失敗しました。もう一度お試しください。');
+                loadingOverlay.remove();
+                startButton.disabled = false;
+                startButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
         });
     </script>
 </x-template>

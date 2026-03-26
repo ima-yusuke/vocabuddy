@@ -25,14 +25,17 @@ class WordAutoCompleteController extends Controller
         $word = $validated['word'];
         $context = $validated['context'] ?? null;
 
-        Log::info('Autocomplete request', ['word' => $word, 'has_context' => !is_null($context)]);
+        // プランに応じたモデル名を取得
+        $modelName = auth()->user()->getAiModelName('gemini-2.5-flash');
+
+        Log::info('Autocomplete request', ['word' => $word, 'has_context' => !is_null($context), 'model' => $modelName]);
 
         try {
             // Step 1: Free Dictionary APIで基本情報を取得
             $dictionaryData = $this->fetchDictionaryData($word);
 
             // Step 2: Gemini APIで整形
-            $aiData = $this->formatWithAI($word, $context, $dictionaryData);
+            $aiData = $this->formatWithAI($word, $context, $dictionaryData, $modelName);
 
             Log::info('Autocomplete successful', ['word' => $word, 'model' => $modelName]);
 
@@ -148,7 +151,7 @@ class WordAutoCompleteController extends Controller
     /**
      * Gemini APIで整形
      */
-    private function formatWithAI(string $word, ?string $context, ?array $dictionaryData): array
+    private function formatWithAI(string $word, ?string $context, ?array $dictionaryData, string $modelName): array
     {
         $apiKey = config('services.gemini.api_key');
 
@@ -164,9 +167,6 @@ class WordAutoCompleteController extends Controller
                 'has_context' => !is_null($context)
             ]);
         }
-
-        // プランに応じたモデル名を取得
-        $modelName = auth()->user()->getAiModelName('gemini-2.5-flash');
 
         // プロンプト作成
         $prompt = $this->buildPrompt($word, $context, $dictionaryData);

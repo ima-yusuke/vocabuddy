@@ -3,7 +3,7 @@
         <section class="py-16 px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto">
                 <div class="mb-10">
-                    <a href="{{route('ShowIndex')}}" class="inline-flex items-center text-sm text-primary-600 hover:text-primary-900 font-medium transition-colors">
+                    <a href="{{route('words.index')}}" class="inline-flex items-center text-sm text-primary-600 hover:text-primary-900 font-medium transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>

@@ -14,7 +14,7 @@
                         </h2>
                     </div>
 
-                    <form method="post" action="{{route('UpdateWord', $word->id)}}" class="space-y-6" id="edit_form">
+                    <form method="post" action="{{route('words.update', $word->id)}}" class="space-y-6" id="edit_form">
                         @csrf
                         @method('PATCH')
 
@@ -112,7 +112,7 @@
                                 class="flex-1 bg-gradient-to-r from-primary-800 to-primary-900 hover:from-primary-900 hover:to-primary-800 text-white px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
                                 更新する
                             </button>
-                            <a href="{{route('ShowIndex')}}"
+                            <a href="{{route('words.index')}}"
                                 class="flex-1 text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
                                 キャンセル
                             </a>

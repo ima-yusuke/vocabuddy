@@ -104,7 +104,7 @@
                                 新しいテストを開始
                             </a>
                         @endif
-                        <a href="{{route('ShowIndex')}}" class="bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-8 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
+                        <a href="{{route('words.index')}}" class="bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-8 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
                             単語帳に戻る
                         </a>
                     </div>

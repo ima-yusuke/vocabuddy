@@ -33,7 +33,7 @@
                             </div>
                         @endif
 
-                        <form method="post" action="{{route('AddWord')}}" class="space-y-6" id="add_form">
+                        <form method="post" action="{{route('words.store')}}" class="space-y-6" id="add_form">
                             @csrf
                             <!-- Hidden fields for autocomplete data -->
                             <input type="hidden" name="part_of_speech" id="part_of_speech_hidden" value="">
@@ -153,7 +153,7 @@
                     </div>
 
                     <!-- 検索フォーム -->
-                    <form method="get" action="{{route('ShowIndex')}}" class="mb-6">
+                    <form method="get" action="{{route('words.index')}}" class="mb-6">
                         <div class="flex flex-col sm:flex-row gap-3">
                             <div class="flex-1 relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -169,7 +169,7 @@
                                     検索
                                 </button>
                                 @if(request('search'))
-                                    <a href="{{route('ShowIndex')}}" class="flex-1 sm:flex-none text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-700 px-6 py-3 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 text-sm sm:text-base whitespace-nowrap">
+                                    <a href="{{route('words.index')}}" class="flex-1 sm:flex-none text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-700 px-6 py-3 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 text-sm sm:text-base whitespace-nowrap">
                                         クリア
                                     </a>
                                 @endif
@@ -205,14 +205,14 @@
                                 <!-- 編集・削除ボタン -->
                                 @hasanyrole('membership')
                                     <div class="flex gap-2">
-                                        <a href="{{ route('EditWord', $word['id']) }}"
+                                        <a href="{{ route('words.edit', $word['id']) }}"
                                             class="text-primary-300 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-blue-50"
                                             title="編集">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
-                                        <form method="post" action="{{route('DeleteWord')}}" onsubmit="return confirmDelete()">
+                                        <form method="post" action="{{route('words.destroy')}}" onsubmit="return confirmDelete()">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="id" value="{{$word["id"]}}">

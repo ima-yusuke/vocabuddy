@@ -111,7 +111,7 @@
                         <a href="{{route('ShowReplyAssistant')}}" class="flex-1 text-center bg-gradient-to-r from-primary-800 to-primary-900 hover:from-primary-900 hover:to-primary-800 text-white px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
                             別の返信を作成
                         </a>
-                        <a href="{{route('ShowIndex')}}" class="flex-1 text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
+                        <a href="{{route('words.index')}}" class="flex-1 text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
                             単語帳に戻る
                         </a>
                     </div>

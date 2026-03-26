@@ -31,7 +31,7 @@ class MainController extends Controller
             $totalCount = $words->count();
         }
 
-        return view("index", compact('words', 'totalCount'));
+        return view("words.index", compact('words', 'totalCount'));
     }
 
     public function AddWord(Request $request){

@@ -58,6 +58,17 @@ class PlanSeeder extends Seeder
                 'ai_model' => 'pro',
                 'is_active' => true,
             ],
+            [
+                'name' => 'Admin',
+                'slug' => 'admin',
+                'word_limit' => null, // 無制限
+                'ai_reply_daily_limit' => null, // 無制限
+                'ai_reply_monthly_limit' => null, // 無制限
+                'price_monthly' => 0, // 無料
+                'price_yearly' => 0, // 無料
+                'ai_model' => 'pro',
+                'is_active' => false, // 一般ユーザーには非表示
+            ],
         ];
 
         foreach ($plans as $plan) {

@@ -1,8 +1,8 @@
 <x-template title="テスト結果">
-    <div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50">
+    <div class="min-h-screen bg-[#ffeb54]">
         <section class="py-16 px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto">
-                <div class="bg-white/80 backdrop-blur-sm border border-primary-100 rounded-2xl p-10 shadow-soft-lg text-center">
+                <div class="bg-white border-2 border-black rounded-2xl p-10 shadow-soft-lg text-center">
                     @if($isCorrect)
                         <div class="mb-10">
                             <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full mb-6 shadow-soft-lg animate-bounce">
@@ -11,7 +11,7 @@
                                 </svg>
                             </div>
                             <h2 class="text-4xl font-bold text-green-600 mb-3">正解！</h2>
-                            <p class="text-primary-600">素晴らしい！</p>
+                            <p class="text-black">素晴らしい！</p>
                         </div>
                     @else
                         <div class="mb-10">
@@ -21,14 +21,14 @@
                                 </svg>
                             </div>
                             <h2 class="text-4xl font-bold text-red-600 mb-3">不正解</h2>
-                            <p class="text-primary-600">もう一度確認してみましょう</p>
+                            <p class="text-black">もう一度確認してみましょう</p>
                         </div>
                     @endif
 
-                    <div class="mb-10 pb-10 border-b-2 border-primary-100">
+                    <div class="mb-10 pb-10 border-b-2 border-black">
                         <div class="inline-block mb-6">
-                            <p class="text-3xl font-bold text-primary-900 tracking-wide">{{$word->word}}</p>
-                            <div class="h-1 bg-gradient-to-r from-transparent via-accent-500 to-transparent mt-3 rounded-full"></div>
+                            <p class="text-3xl font-bold text-black tracking-wide">{{$word->word}}</p>
+                            <div class="h-1 bg-[#ffeb54] mt-3 rounded-full"></div>
                         </div>
 
                         <div class="max-w-md mx-auto space-y-6">
@@ -58,7 +58,7 @@
 
                     <div class="mb-10 text-left max-w-2xl mx-auto">
                         <div class="bg-gradient-to-br from-primary-50 to-accent-50/30 rounded-xl p-8 border border-primary-200">
-                            <h3 class="text-sm font-semibold text-primary-900 mb-4 flex items-center">
+                            <h3 class="text-sm font-semibold text-black mb-4 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                 </svg>
@@ -86,7 +86,7 @@
                                             <p class="text-primary-700 italic leading-relaxed">{{$word->en_example}}</p>
                                         @endif
                                         @if($word->jp_example)
-                                            <p class="text-primary-600 leading-relaxed">{{$word->jp_example}}</p>
+                                            <p class="text-black leading-relaxed">{{$word->jp_example}}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                 新しいテストを開始
                             </a>
                         @endif
-                        <a href="{{route('words.index')}}" class="bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-8 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
+                        <a href="{{route('words.index')}}" class="bg-white hover:bg-primary-50 border-2 border-primary-200 text-black px-8 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
                             単語帳に戻る
                         </a>
                     </div>

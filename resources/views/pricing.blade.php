@@ -46,8 +46,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($plans as $plan)
-                <div class="bg-white p-8 rounded-2xl border-2 {{ $plan['type'] === 'standard' ? 'border-gray-900 shadow-lg' : 'border-gray-200' }}">
-                    @if($plan['type'] === 'standard')
+                <div class="bg-white p-8 rounded-2xl border-2 {{ $plan['type'] === 'basic' ? 'border-gray-900 shadow-lg' : 'border-gray-200' }}">
+                    @if($plan['type'] === 'basic')
                     <div class="text-xs font-semibold text-gray-900 mb-2">おすすめ</div>
                     @endif
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $plan['name'] }}</h3>

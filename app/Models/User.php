@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * 返信テンプレートとのリレーション
+     */
+    public function replyTemplates()
+    {
+        return $this->hasMany(ReplyTemplate::class);
+    }
 }

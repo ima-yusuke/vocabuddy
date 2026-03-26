@@ -117,7 +117,7 @@ class MainController extends Controller
             }
         }
 
-        return redirect()->route('ShowIndex')->with('success', '単語が更新されました');
+        return redirect()->route('words.index')->with('success', '単語が更新されました');
     }
 
     public function DeleteWord(Request $request)

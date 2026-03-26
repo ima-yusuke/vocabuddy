@@ -12,35 +12,43 @@ class PricingController extends Controller
         $plans = [
             [
                 'type' => 'free',
-                'name' => '無料プラン',
-                'limit' => 20,
+                'name' => 'Free',
+                'limit' => 50,
+                'ai_daily' => 2,
+                'ai_monthly' => null,
                 'monthly' => 0,
                 'yearly' => 0,
-                'features' => ['20単語まで登録', 'AI自動補完', '単語テスト', '返信アシスタント']
+                'features' => ['50単語まで登録', 'AI返信 2回/日', 'AI自動補完', '単語テスト', '返信アシスタント']
             ],
             [
-                'type' => 'standard',
-                'name' => 'スタンダード',
-                'limit' => 50,
-                'monthly' => 500,
-                'yearly' => 5000,
-                'features' => ['50単語まで登録', 'AI自動補完', '単語テスト', '返信アシスタント']
+                'type' => 'basic',
+                'name' => 'Basic',
+                'limit' => 300,
+                'ai_daily' => 10,
+                'ai_monthly' => null,
+                'monthly' => 400,
+                'yearly' => 4000,
+                'features' => ['300単語まで登録', 'AI返信 10回/日', 'AI自動補完', '単語テスト', '返信アシスタント']
             ],
             [
-                'type' => 'plus',
-                'name' => 'プラス',
-                'limit' => 200,
+                'type' => 'pro',
+                'name' => 'Pro',
+                'limit' => null,
+                'ai_daily' => null,
+                'ai_monthly' => 300,
                 'monthly' => 1000,
                 'yearly' => 10000,
-                'features' => ['200単語まで登録', 'AI自動補完', '単語テスト', '返信アシスタント']
+                'features' => ['無制限で登録', 'AI返信 月300回', 'AI自動補完', '単語テスト', '返信アシスタント', '高性能AIモデル']
             ],
             [
                 'type' => 'premium',
-                'name' => 'プレミアム',
+                'name' => 'Premium',
                 'limit' => null,
-                'monthly' => 2000,
-                'yearly' => 20000,
-                'features' => ['無制限で登録', 'AI自動補完', '単語テスト', '返信アシスタント', '優先サポート']
+                'ai_daily' => null,
+                'ai_monthly' => null,
+                'monthly' => 1750,
+                'yearly' => 17500,
+                'features' => ['無制限で登録', 'AI返信 無制限', 'AI自動補完', '単語テスト', '返信アシスタント', '高性能AIモデル', '優先サポート']
             ],
         ];
 

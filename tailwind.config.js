@@ -12,7 +12,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', 'Noto Sans JP', 'Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Zen Kaku Gothic New', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 primary: {

@@ -1,15 +1,15 @@
 <x-template title="単語を編集">
-    <div class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50">
+    <div class="min-h-screen bg-[#ffeb54]">
         <section class="py-16 px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
-                <div class="bg-white/80 backdrop-blur-sm border border-primary-100 rounded-2xl p-10 shadow-soft-lg">
+                <div class="bg-white border-2 border-black rounded-2xl p-10 shadow-soft-lg">
                     <div class="flex items-center mb-8">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center mr-4">
+                        <div class="w-12 h-12 rounded-xl bg-[#ffeb54] flex items-center justify-center mr-4">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-primary-900">
+                        <h2 class="text-2xl font-bold text-black">
                             単語を編集
                         </h2>
                     </div>
@@ -23,19 +23,19 @@
                         <input type="hidden" name="pronunciation_katakana" id="pronunciation_katakana_hidden" value="{{$word->pronunciation_katakana}}">
 
                         <div>
-                            <label for="word" class="block text-sm font-semibold text-primary-900 mb-2">
+                            <label for="word" class="block text-sm font-semibold text-black mb-2">
                                 英単語
                             </label>
                             <input type="text" id="word" name="word" value="{{$word->word}}" placeholder="例: serendipity"
-                                class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400">
+                                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400">
                         </div>
 
                         <div>
-                            <label for="context" class="block text-sm font-semibold text-primary-900 mb-2">
+                            <label for="context" class="block text-sm font-semibold text-black mb-2">
                                 文脈・例文（任意）
                             </label>
                             <textarea id="context" placeholder="例: I found this word in a mystery novel."
-                                class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 resize-none transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400" rows="2"></textarea>
+                                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 resize-none transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400" rows="2"></textarea>
                         </div>
 
                         <button type="button" id="autocomplete_btn"
@@ -44,28 +44,28 @@
                         </button>
 
                         <div id="loading_message" style="display: none;"
-                            class="bg-accent-50 border border-accent-200 rounded-xl p-4 text-accent-700 text-sm">
+                            class="bg-[#ffeb54]/10 border border-black rounded-xl p-4 text-black text-sm">
                             AI が単語情報を取得しています...
                         </div>
 
                         <div id="preview_area" style="display: none;"
-                            class="bg-gradient-to-br from-primary-50 to-accent-50/30 rounded-xl p-6 border border-primary-200 space-y-4">
-                            <h3 class="text-lg font-bold text-primary-900 mb-4">AI 補完結果</h3>
+                            class="bg-[#ffeb54]/10 rounded-xl p-6 border border-black space-y-4">
+                            <h3 class="text-lg font-bold text-black mb-4">AI 補完結果</h3>
 
                             <div>
-                                <label class="block text-sm font-semibold text-primary-900 mb-2">品詞</label>
+                                <label class="block text-sm font-semibold text-black mb-2">品詞</label>
                                 <input type="text" id="part_of_speech" readonly
-                                    class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
+                                    class="w-full border-2 border-black rounded-xl px-5 py-3 bg-white text-black">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-primary-900 mb-2">発音（カタカナ）</label>
+                                <label class="block text-sm font-semibold text-black mb-2">発音（カタカナ）</label>
                                 <input type="text" id="pronunciation_katakana" readonly
-                                    class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 bg-white/70 text-primary-900">
+                                    class="w-full border-2 border-black rounded-xl px-5 py-3 bg-white text-black">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-semibold text-primary-900 mb-2">意味</label>
+                                <label class="block text-sm font-semibold text-black mb-2">意味</label>
                                 <div id="meanings_container" class="space-y-2">
                                 </div>
                             </div>
@@ -74,16 +74,16 @@
                         <div id="manual_meanings">
                             @foreach($word->japanese as $index => $japanese)
                                 <div>
-                                    <label for="jp_word_{{$index + 1}}" class="block text-sm font-semibold text-primary-900 mb-2">
+                                    <label for="jp_word_{{$index + 1}}" class="block text-sm font-semibold text-black mb-2">
                                         意味 {{$index + 1}}
                                     </label>
                                     <input type="text" id="jp_word_{{$index + 1}}" name="meaningArray[]" value="{{$japanese->japanese}}" placeholder="意味を入力"
-                                        class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400">
+                                        class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400">
                                 </div>
                             @endforeach
 
                             <button type="button" id="add_meaning"
-                                class="inline-flex items-center text-sm text-accent-700 hover:text-accent-800 font-semibold transition-colors">
+                                class="inline-flex items-center text-sm text-black hover:text-[#ffeb54] font-semibold transition-colors">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                 </svg>
@@ -92,28 +92,28 @@
                         </div>
 
                         <div>
-                            <label for="en_example" class="block text-sm font-semibold text-primary-900 mb-2">
+                            <label for="en_example" class="block text-sm font-semibold text-black mb-2">
                                 例文（英語）
                             </label>
                             <textarea id="en_example" name="en_example" placeholder="例: It was pure serendipity that we met at the cafe."
-                                class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 resize-none transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400" rows="3">{{$word->en_example}}</textarea>
+                                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 resize-none transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400" rows="3">{{$word->en_example}}</textarea>
                         </div>
 
                         <div>
-                            <label for="jp_example" class="block text-sm font-semibold text-primary-900 mb-2">
+                            <label for="jp_example" class="block text-sm font-semibold text-black mb-2">
                                 例文（日本語）
                             </label>
                             <textarea id="jp_example" name="jp_example" placeholder="例: カフェで会ったのは純粋な偶然だった。"
-                                class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 resize-none transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400" rows="3">{{$word->jp_example}}</textarea>
+                                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 resize-none transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400" rows="3">{{$word->jp_example}}</textarea>
                         </div>
 
                         <div class="flex gap-4">
                             <button type="submit"
-                                class="flex-1 bg-gradient-to-r from-primary-800 to-primary-900 hover:from-primary-900 hover:to-primary-800 text-white px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
+                                class="flex-1 bg-black hover:bg-[#1A1A1A] text-white px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300 transform hover:-translate-y-0.5">
                                 更新する
                             </button>
                             <a href="{{route('words.index')}}"
-                                class="flex-1 text-center bg-white hover:bg-primary-50 border-2 border-primary-200 text-primary-900 px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
+                                class="flex-1 text-center bg-white hover:bg-gray-100 border-2 border-black text-black px-6 py-4 rounded-xl font-semibold shadow-soft hover:shadow-soft-lg transition-all duration-300">
                                 キャンセル
                             </a>
                         </div>
@@ -137,11 +137,11 @@
     ADD_MEANING_BTN.addEventListener('click', () => {
         const div = document.createElement('div');
         div.innerHTML = `
-            <label for="jp_word_${count}" class="block text-sm font-semibold text-primary-900 mb-2">
+            <label for="jp_word_${count}" class="block text-sm font-semibold text-black mb-2">
                 意味 ${count}
             </label>
             <input type="text" id="jp_word_${count}" name="meaningArray[]" placeholder="意味を入力"
-                class="w-full border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white/50 backdrop-blur-sm text-primary-900 placeholder-primary-400">
+                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400">
         `;
         form.insertBefore(div, ADD_MEANING_BTN);
         count++;
@@ -263,7 +263,7 @@
                 meaningDiv.className = 'flex gap-2';
                 meaningDiv.innerHTML = `
                     <input type="text" name="meaningArray[]" value="${escapeHtml(meaning)}"
-                        class="flex-1 border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white text-primary-900">
+                        class="flex-1 border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white text-black">
                     ${index > 0 ? `
                     <button type="button" onclick="this.parentElement.remove()"
                         class="text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
@@ -279,7 +279,7 @@
             // 意味追加ボタンを追加
             const addBtn = document.createElement('button');
             addBtn.type = 'button';
-            addBtn.className = 'inline-flex items-center text-sm text-accent-700 hover:text-accent-800 font-semibold transition-colors mt-2';
+            addBtn.className = 'inline-flex items-center text-sm text-black hover:text-[#ffeb54] font-semibold transition-colors mt-2';
             addBtn.innerHTML = `
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -291,7 +291,7 @@
                 newMeaningDiv.className = 'flex gap-2';
                 newMeaningDiv.innerHTML = `
                     <input type="text" name="meaningArray[]" placeholder="意味を入力"
-                        class="flex-1 border-2 border-primary-200 rounded-xl px-5 py-3 focus:outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-100 transition-all duration-200 bg-white text-primary-900">
+                        class="flex-1 border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white text-black">
                     <button type="button" onclick="this.parentElement.remove()"
                         class="text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

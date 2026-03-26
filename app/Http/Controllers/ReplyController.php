@@ -5,12 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Word;
+use App\Models\ReplyTemplate;
+use App\Services\GeminiEmbeddingService;
 
 class ReplyController extends Controller
 {
     public function ShowReplyAssistant()
     {
         return view('reply-assistant');
+    }
+
+    /**
+     * 返信履歴一覧を表示
+     */
+    public function ShowHistory(Request $request)
+    {
+        $category = $request->input('category');
+
+        $query = ReplyTemplate::where('user_id', auth()->id())
+            ->orderBy('times_used', 'desc')
+            ->orderBy('created_at', 'desc');
+
+        if ($category) {
+            $query->where('category', $category);
+        }
+
+        $templates = $query->get();
+
+        return view('reply-history', compact('templates', 'category'));
+    }
+
+    /**
+     * 類似した返信テンプレートを検索
+     */
+    public function FindSimilarReplies(Request $request)
+    {
+        $friendMessage = $request->input('friend_message');
+        $replyIntent = $request->input('reply_intent');
+
+        if (empty($friendMessage) || empty($replyIntent)) {
+            return response()->json(['similar_replies' => []]);
+        }
+
+        // Embeddingを生成
+        $embeddingService = new GeminiEmbeddingService();
+        $searchQuery = $embeddingService->createSearchQuery($friendMessage, $replyIntent);
+        $queryEmbedding = $embeddingService->generateEmbedding($searchQuery);
+
+        if (!$queryEmbedding) {
+            return response()->json(['similar_replies' => []]);
+        }
+
+        // 類似した返信を検索（閾値0.85以上）
+        $similarReplies = ReplyTemplate::findSimilar(auth()->id(), $queryEmbedding, 0.85);
+
+        // 上位3件まで返す
+        $results = $similarReplies->take(3)->map(function ($template) {
+            return [
+                'id' => $template->id,
+                'reply_en' => $template->reply_en,
+                'reply_ja' => $template->reply_ja,
+                'times_used' => $template->times_used,
+                'similarity_score' => round($template->similarity_score * 100, 1),
+            ];
+        });
+
+        return response()->json(['similar_replies' => $results]);
     }
 
     public function GenerateReply(Request $request)
@@ -124,6 +184,34 @@ class ReplyController extends Controller
                         }
                     }
                 }
+
+                // 日本語訳を抽出
+                $japaneseTranslation = '';
+                if (preg_match('/【日本語訳】\s*\n(.+?)(\n|$)/s', $generatedText, $matches)) {
+                    $japaneseTranslation = trim($matches[1]);
+                } else if (preg_match('/日本語訳[:\s]*\n(.+?)(\n|$)/s', $generatedText, $matches)) {
+                    $japaneseTranslation = trim($matches[1]);
+                }
+
+                // 履歴として保存
+                $vocabIds = collect($usedWords)->pluck('id')->toArray();
+
+                // Embeddingを生成
+                $embeddingService = new GeminiEmbeddingService();
+                $searchQuery = $embeddingService->createSearchQuery($friendMessage, $replyIntent);
+                $embedding = $embeddingService->generateEmbedding($searchQuery);
+
+                ReplyTemplate::create([
+                    'user_id' => auth()->id(),
+                    'category' => $relationship,
+                    'partner_message' => $friendMessage,
+                    'intent_ja' => $replyIntent,
+                    'reply_en' => $englishReply,
+                    'reply_ja' => $japaneseTranslation,
+                    'vocab_ids' => $vocabIds,
+                    'times_used' => 0,
+                    'embedding' => $embedding,
+                ]);
 
                 return view('reply-result', compact('friendMessage', 'replyIntent', 'generatedText', 'englishReply', 'usedWords'));
             } else {

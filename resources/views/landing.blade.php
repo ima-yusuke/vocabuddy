@@ -305,8 +305,8 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($plans as $plan)
-                <div class="bg-white p-8 rounded-3xl border-2 border-black transition-all duration-300 {{ $plan['type'] === 'standard' ? 'scale-105 shadow-2xl' : '' }}">
-                    @if($plan['type'] === 'standard')
+                <div class="bg-white p-8 rounded-3xl border-2 border-black transition-all duration-300 {{ $plan['type'] === 'basic' ? 'scale-105 shadow-2xl' : '' }}">
+                    @if($plan['type'] === 'basic')
                     <div class="inline-block px-3 py-1 bg-yellow rounded-full text-xs font-bold text-black mb-4">
                         おすすめ
                     </div>

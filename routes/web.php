@@ -41,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
 
     // 返信アシスタント
     Route::get('/reply-assistant', [ReplyController::class, 'ShowReplyAssistant'])->name('ShowReplyAssistant');
+    Route::get('/reply-history', [ReplyController::class, 'ShowHistory'])->name('ShowReplyHistory');
+    Route::post('/reply-assistant/find-similar', [ReplyController::class, 'FindSimilarReplies'])->name('FindSimilarReplies');
     Route::post('/reply-assistant/generate', [ReplyController::class, 'GenerateReply'])->name('GenerateReply');
 
     // AI自動補完

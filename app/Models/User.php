@@ -100,4 +100,12 @@ class User extends Authenticatable
         // デフォルトでFreeプラン
         return Plan::where('slug', 'free')->first();
     }
+
+    /**
+     * 苦手単語
+     */
+    public function weakWords()
+    {
+        return $this->hasMany(WeakWord::class);
+    }
 }

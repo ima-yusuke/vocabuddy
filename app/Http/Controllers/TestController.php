@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Word;
+use App\Models\WeakWord;
 
 class TestController extends Controller
 {
@@ -74,7 +75,8 @@ class TestController extends Controller
     {
         \Log::info('=== generateQuestionBatch START ===', ['count' => $count]);
 
-        $words = Word::with('japanese')->get();
+        $userId = auth()->id();
+        $words = Word::with('japanese')->where('user_id', $userId)->get();
 
         \Log::info('Words fetched', ['total_words' => $words->count()]);
 
@@ -85,7 +87,37 @@ class TestController extends Controller
 
         // 最大指定問題数（または単語数が少ない場合はその数）
         $questionCount = min($count, $words->count());
-        $selectedWords = $words->random($questionCount);
+
+        // 苦手単語を優先的に出題
+        $weakWordIds = WeakWord::where('user_id', $userId)
+            ->pluck('word_id')
+            ->toArray();
+
+        \Log::info('Weak words', ['weak_word_count' => count($weakWordIds)]);
+
+        $selectedWords = collect();
+
+        if (count($weakWordIds) > 0) {
+            // 苦手単語がある場合、問題の60%を苦手単語から出題
+            $weakWordCount = min(ceil($questionCount * 0.6), count($weakWordIds));
+            $weakWords = $words->whereIn('id', $weakWordIds)->random(min($weakWordCount, count($weakWordIds)));
+            $selectedWords = $selectedWords->merge($weakWords);
+
+            \Log::info('Weak words selected', ['selected_count' => $weakWords->count()]);
+        }
+
+        // 残りをランダムに選択
+        $remainingCount = $questionCount - $selectedWords->count();
+        if ($remainingCount > 0) {
+            $remainingWords = $words->whereNotIn('id', $selectedWords->pluck('id'))
+                ->random(min($remainingCount, $words->whereNotIn('id', $selectedWords->pluck('id'))->count()));
+            $selectedWords = $selectedWords->merge($remainingWords);
+
+            \Log::info('Random words selected', ['selected_count' => $remainingWords->count()]);
+        }
+
+        // シャッフルして順序をランダムに
+        $selectedWords = $selectedWords->shuffle();
 
         \Log::info('Words selected for questions', ['selected_count' => $selectedWords->count()]);
 
@@ -318,9 +350,44 @@ class TestController extends Controller
 
         $word = Word::with('japanese')->findOrFail($wordId);
 
+        // 苦手単語の記録を更新
+        $this->updateWeakWord(auth()->id(), $wordId, $isCorrect);
+
         $remainingQuestions = count(session('test_questions', []));
         $hasMoreQuestions = $remainingQuestions > 0;
 
         return view('test-result', compact('isCorrect', 'selectedAnswer', 'correctAnswer', 'word', 'hasMoreQuestions'));
+    }
+
+    /**
+     * 苦手単語の記録を更新
+     */
+    private function updateWeakWord($userId, $wordId, $isCorrect)
+    {
+        $weakWord = WeakWord::where('user_id', $userId)
+            ->where('word_id', $wordId)
+            ->first();
+
+        if ($isCorrect) {
+            // 正解の場合
+            if ($weakWord) {
+                $weakWord->recordCorrect(); // 連続正解をカウント、3回で削除
+            }
+            // 苦手単語でない場合は何もしない
+        } else {
+            // 不正解の場合
+            if ($weakWord) {
+                $weakWord->recordIncorrect(); // 連続正解をリセット
+            } else {
+                // 初めて間違えた場合は新規作成
+                WeakWord::create([
+                    'user_id' => $userId,
+                    'word_id' => $wordId,
+                    'incorrect_count' => 1,
+                    'consecutive_correct_count' => 0,
+                    'last_incorrect_at' => now(),
+                ]);
+            }
+        }
     }
 }

@@ -31,4 +31,24 @@ class Word extends Model
         return $this->hasMany(Japanese::class);
     }
 
+    /**
+     * この単語の使用頻度を取得（AI返信で何回使われたか）
+     */
+    public function usageCount(): int
+    {
+        return ReplyTemplate::where('user_id', $this->user_id)
+            ->whereJsonContains('vocab_ids', $this->id)
+            ->count();
+    }
+
+    /**
+     * この単語を使用したAI返信テンプレート
+     */
+    public function replyTemplates()
+    {
+        return ReplyTemplate::where('user_id', $this->user_id)
+            ->whereJsonContains('vocab_ids', $this->id)
+            ->get();
+    }
+
 }

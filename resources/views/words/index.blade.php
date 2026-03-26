@@ -286,13 +286,29 @@
     ADD_MEANING_BTN.addEventListener('click', () => {
         const div = document.createElement('div');
         div.innerHTML = `
-            <label for="jp_word_${count}" class="block text-sm font-semibold text-black mb-2">
-                意味 ${count}
-            </label>
-            <input type="text" id="jp_word_${count}" name="meaningArray[]" placeholder="意味を入力"
-                class="w-full border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400">
+            <div class="flex items-center justify-between mb-2">
+                <label for="jp_word_${count}" class="text-sm font-semibold text-black">
+                    意味 ${count}
+                </label>
+                <button type="button" onclick="this.closest('div').parentElement.remove()"
+                    class="md:hidden text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="jp_word_${count}" name="meaningArray[]" placeholder="意味を入力"
+                    class="flex-1 border-2 border-black rounded-xl px-5 py-3 focus:outline-none focus:border-[#ffeb54] focus:ring-4 focus:ring-[#ffeb54]/20 transition-all duration-200 bg-white backdrop-blur-sm text-black placeholder-gray-400">
+                <button type="button" onclick="this.closest('div').parentElement.remove()"
+                    class="hidden md:block text-red-500 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
         `;
-        form.insertBefore(div, ADD_MEANING_BTN);
+        MANUAL_MEANINGS.insertBefore(div, ADD_MEANING_BTN);
         count++;
     });
 

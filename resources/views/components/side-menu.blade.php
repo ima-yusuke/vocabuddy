@@ -76,6 +76,14 @@
                         </a>
                     </li>
                     <li class="side_li">
+                        <a href="{{ route('mypage') }}" class="flex items-center px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-all duration-300 group">
+                            <svg class="w-5 h-5 mr-3 text-[#ffeb54] group-hover:text-[#ffeb54]/80 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <span class="text-lg font-semibold">マイページ</span>
+                        </a>
+                    </li>
+                    <li class="side_li">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full flex items-center px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-all duration-300 group">

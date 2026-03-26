@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/side-menu.css', 'resources/js/side-menu.js', 'resources/js/app.js'])
     <style>
         :root {
             --color-primary: #ffeb54;
@@ -102,6 +102,7 @@
     </style>
 </head>
 <body class="antialiased">
+    <x-side-menu></x-side-menu>
     <!-- ナビゲーション -->
     <nav class="fixed w-full bg-white border-b border-gray-200 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

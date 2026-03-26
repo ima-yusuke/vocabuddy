@@ -1,10 +1,10 @@
-<div id="hamburger_icon" class="fixed right-6 top-6 z-50 cursor-pointer bg-white/80 backdrop-blur-sm hover:bg-white p-3 rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 border border-black">
-    <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="hamburger_icon" class="md:hidden fixed right-4 top-4 z-[60] cursor-pointer transition-all duration-300">
+    <svg class="w-7 h-7 text-black hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
     </svg>
 </div>
-<div id="close_icon" class="hidden fixed right-6 top-6 z-50 cursor-pointer bg-white/90 backdrop-blur-sm hover:bg-white p-3 rounded-xl shadow-soft-lg transition-all duration-300 border border-black">
-    <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="close_icon" class="hidden md:hidden fixed right-4 top-4 z-[60] cursor-pointer transition-all duration-300">
+    <svg class="w-7 h-7 text-black hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
     </svg>
 </div>

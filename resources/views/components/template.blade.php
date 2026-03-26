@@ -8,6 +8,7 @@
 </x-head>
 <body id="body">
     <x-side-menu></x-side-menu>
+    <x-navigation></x-navigation>
     {{ $slot }}
 </body>
 </html>

@@ -53,4 +53,43 @@ class User extends Authenticatable
     {
         return $this->hasMany(ReplyTemplate::class);
     }
+
+    /**
+     * ユーザーのサブスクリプション
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * 現在のアクティブなサブスクリプション
+     */
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class)->active()->latest();
+    }
+
+    /**
+     * AI使用ログ
+     */
+    public function aiUsageLogs()
+    {
+        return $this->hasMany(AiUsageLog::class);
+    }
+
+    /**
+     * 現在のプランを取得（サブスクリプションがない場合はFreeプラン）
+     */
+    public function currentPlan()
+    {
+        $subscription = $this->subscription;
+
+        if ($subscription && $subscription->isActive()) {
+            return $subscription->plan;
+        }
+
+        // デフォルトでFreeプラン
+        return Plan::where('slug', 'free')->first();
+    }
 }

@@ -56,8 +56,8 @@
                             </div>
 
                             <button type="button" id="autocomplete_btn"
-                                class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                                AI で意味を補完
+                                class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                                🤖 AI で意味を補完
                             </button>
 
                             <div id="loading_message" style="display: none;"

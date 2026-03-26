@@ -240,6 +240,80 @@
         </div>
     </section>
 
+    <!-- AI返信デモセクション -->
+    <section class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    AI返信アシスタント体験
+                </h2>
+                <p class="text-xl text-gray-600">実際の動作を見てみましょう</p>
+            </div>
+
+            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+                <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 space-y-6">
+                    <!-- 英文入力 -->
+                    <div>
+                        <label class="block text-sm font-bold text-black mb-2">友達からのメッセージ</label>
+                        <div class="bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-3 min-h-[60px] flex items-center">
+                            <p id="demo-english" class="text-gray-800 text-lg"></p>
+                        </div>
+                    </div>
+
+                    <!-- 日本語入力 -->
+                    <div>
+                        <label class="block text-sm font-bold text-black mb-2">返信したい内容（日本語）</label>
+                        <div class="bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-3 min-h-[60px] flex items-center">
+                            <p id="demo-japanese" class="text-gray-800 text-lg"></p>
+                        </div>
+                    </div>
+
+                    <!-- AI生成ボタン -->
+                    <div class="text-center">
+                        <button id="demo-button"
+                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span id="demo-button-text">AI返信を生成</span>
+                        </button>
+                    </div>
+
+                    <!-- ローディング -->
+                    <div id="demo-loading" class="hidden">
+                        <div class="bg-[#ffeb54]/20 border-2 border-black rounded-xl p-6 text-center">
+                            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
+                                <div class="w-8 h-8 border-4 border-[#ffeb54] border-t-black rounded-full animate-spin"></div>
+                            </div>
+                            <p class="text-black font-semibold">AI が返信文を生成中...</p>
+                        </div>
+                    </div>
+
+                    <!-- 結果表示 -->
+                    <div id="demo-result" class="hidden">
+                        <div class="bg-[#ffeb54]/10 border-2 border-[#ffeb54] rounded-xl p-6">
+                            <h4 class="text-lg font-bold text-black mb-3 flex items-center">
+                                <svg class="w-6 h-6 mr-2 text-[#ffeb54]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                生成された返信文
+                            </h4>
+                            <div class="bg-white rounded-xl p-4 mb-3">
+                                <p id="demo-result-text" class="text-gray-800 text-lg leading-relaxed"></p>
+                            </div>
+                            <p class="text-sm text-gray-600">💡 あなたが登録した単語を使った自然な英語の返信文を生成します</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <p class="text-gray-700 text-lg mb-4">このような返信文を自動で作成できます</p>
+                    <a href="{{ route('register') }}"
+                        class="inline-block bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1">
+                        無料で始める →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="section-divider max-w-6xl mx-auto"></div>
 
     <!-- 統計データセクション -->
@@ -476,5 +550,115 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // AI返信デモアニメーション
+        const demoData = {
+            english: "Hey! How have you been? It's been a while since we last caught up!",
+            japanese: "元気だよ！最近は仕事が忙しくて、なかなか会えなかったね。",
+            result: "I've been doing great! I've been really busy with work lately, so we haven't been able to meet. Let's catch up soon over coffee!"
+        };
+
+        let isAnimating = false;
+        let autoReplayTimeout;
+
+        // タイピングアニメーション関数
+        async function typeText(element, text, speed = 50) {
+            element.textContent = '';
+            for (let i = 0; i < text.length; i++) {
+                element.textContent += text[i];
+                await new Promise(resolve => setTimeout(resolve, speed));
+            }
+        }
+
+        // デモアニメーション実行
+        async function runDemo() {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const englishEl = document.getElementById('demo-english');
+            const japaneseEl = document.getElementById('demo-japanese');
+            const buttonEl = document.getElementById('demo-button');
+            const buttonTextEl = document.getElementById('demo-button-text');
+            const loadingEl = document.getElementById('demo-loading');
+            const resultEl = document.getElementById('demo-result');
+            const resultTextEl = document.getElementById('demo-result-text');
+
+            // リセット
+            englishEl.textContent = '';
+            japaneseEl.textContent = '';
+            loadingEl.classList.add('hidden');
+            resultEl.classList.add('hidden');
+            resultTextEl.textContent = '';
+            buttonEl.disabled = true;
+            buttonTextEl.textContent = '入力中...';
+
+            // 英文をタイピング
+            await typeText(englishEl, demoData.english, 30);
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 日本語をタイピング
+            await typeText(japaneseEl, demoData.japanese, 50);
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // ボタンを有効化
+            buttonEl.disabled = false;
+            buttonTextEl.textContent = 'AI返信を生成';
+
+            // 自動クリック
+            await new Promise(resolve => setTimeout(resolve, 500));
+            buttonEl.disabled = true;
+            buttonTextEl.textContent = '生成中...';
+
+            // ローディング表示
+            loadingEl.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // ローディング非表示
+            loadingEl.classList.add('hidden');
+
+            // 結果を表示
+            resultEl.classList.remove('hidden');
+            await typeText(resultTextEl, demoData.result, 40);
+
+            // 完了
+            buttonEl.disabled = false;
+            buttonTextEl.textContent = 'もう一度見る';
+            isAnimating = false;
+
+            // 5秒後に自動でリプレイ
+            autoReplayTimeout = setTimeout(() => {
+                runDemo();
+            }, 5000);
+        }
+
+        // ボタンクリックイベント
+        document.getElementById('demo-button').addEventListener('click', () => {
+            clearTimeout(autoReplayTimeout);
+            runDemo();
+        });
+
+        // ページ読み込み時に自動で開始
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runDemo();
+            }, 1000);
+        });
+
+        // Intersection Observerでビューポートに入ったら開始
+        const demoSection = document.querySelector('#demo-button').closest('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isAnimating) {
+                    clearTimeout(autoReplayTimeout);
+                    setTimeout(() => runDemo(), 500);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        if (demoSection) {
+            observer.observe(demoSection);
+        }
+    </script>
 </body>
 </html>

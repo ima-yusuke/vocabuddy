@@ -8,6 +8,135 @@
                 </div>
 
                 <div class="space-y-6">
+                    <!-- プラン情報 -->
+                    <div class="bg-white border-2 border-black rounded-2xl p-8 shadow-soft-lg">
+                        <h2 class="text-xl font-bold text-black mb-2">現在のプラン</h2>
+                        <p class="text-sm text-gray-600 mb-6">ご利用中のプラン情報</p>
+
+                        @php
+                            $plan = $user->currentPlan();
+                            $subscription = $user->subscription;
+                        @endphp
+
+                        <div class="space-y-4">
+                            <!-- プラン名 -->
+                            @if($plan->slug === 'admin')
+                                <div class="p-4 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl border-2 border-black">
+                                    <div class="flex items-center">
+                                        <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                        </svg>
+                                        <div>
+                                            <p class="text-sm text-white/80 mb-1">権限</p>
+                                            <p class="text-2xl font-bold text-white">管理者</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-center justify-between p-4 bg-[#ffeb54]/10 rounded-xl border border-[#ffeb54]">
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">プラン</p>
+                                        <p class="text-2xl font-bold text-black">{{ $plan->name }}</p>
+                                    </div>
+                                    @if($plan->slug !== 'free')
+                                        <div class="text-right">
+                                            <p class="text-sm text-gray-600 mb-1">月額料金</p>
+                                            <p class="text-xl font-bold text-black">¥{{ number_format($plan->price_monthly) }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+
+                            <!-- 加入日 -->
+                            @if($subscription && $subscription->isActive())
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="p-4 bg-gray-50 rounded-xl">
+                                        <p class="text-sm text-gray-600 mb-1">加入日</p>
+                                        <p class="text-lg font-semibold text-black">{{ $subscription->started_at->format('Y年m月d日') }}</p>
+                                    </div>
+                                    <div class="p-4 bg-gray-50 rounded-xl">
+                                        <p class="text-sm text-gray-600 mb-1">ステータス</p>
+                                        <p class="text-lg font-semibold text-green-600">
+                                            @if($subscription->status === 'active')
+                                                ✓ 有効
+                                            @else
+                                                {{ $subscription->status }}
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+
+                                @if($subscription->ends_at)
+                                    <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+                                        <p class="text-sm text-orange-800">
+                                            <span class="font-semibold">更新日:</span> {{ $subscription->ends_at->format('Y年m月d日') }}
+                                        </p>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="p-4 bg-gray-50 rounded-xl">
+                                    <p class="text-sm text-gray-600 mb-1">ステータス</p>
+                                    <p class="text-lg font-semibold text-black">Freeプラン</p>
+                                </div>
+                            @endif
+
+                            <!-- プラン詳細 -->
+                            <div class="border-t-2 border-gray-200 pt-4">
+                                <p class="text-sm font-semibold text-black mb-3">プラン内容</p>
+                                <div class="space-y-2 text-sm text-gray-700">
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 text-[#ffeb54] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span>単語登録: {{ $plan->word_limit ? number_format($plan->word_limit) . '単語まで' : '無制限' }}</span>
+                                    </div>
+                                    @if($plan->ai_reply_daily_limit)
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-[#ffeb54] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>AI返信: {{ number_format($plan->ai_reply_daily_limit) }}回/日</span>
+                                        </div>
+                                    @endif
+                                    @if($plan->ai_reply_monthly_limit)
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-[#ffeb54] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>AI返信: {{ number_format($plan->ai_reply_monthly_limit) }}回/月</span>
+                                        </div>
+                                    @endif
+                                    @if($plan->ai_autocomplete_daily_limit)
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-[#ffeb54] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>AI単語補完: {{ number_format($plan->ai_autocomplete_daily_limit) }}回/日</span>
+                                        </div>
+                                    @endif
+                                    @if($plan->ai_autocomplete_monthly_limit)
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-[#ffeb54] mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>AI単語補完: {{ number_format($plan->ai_autocomplete_monthly_limit) }}回/月</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- プラン変更ボタン（管理者以外） -->
+                            @if($plan->slug !== 'admin')
+                                <div class="pt-4">
+                                    <a href="{{ route('pricing') }}"
+                                        class="inline-block bg-[#ffeb54] hover:bg-[#ffe135] text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 shadow-soft hover:shadow-soft-lg">
+                                        プランを変更する
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
                     <!-- メールアドレス変更 -->
                     <div class="bg-white border-2 border-black rounded-2xl p-8 shadow-soft-lg">
                         <h2 class="text-xl font-bold text-black mb-2">メールアドレスとユーザー名</h2>

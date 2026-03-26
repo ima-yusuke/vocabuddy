@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Plan;
+use App\Models\Subscription;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,6 +58,18 @@ class RegisteredUserController extends Controller
 
         // ユーザーに 'membership' ロールを割り当て
         $user->assignRole($membershipRole);
+
+        // Freeプランのサブスクリプションを自動作成
+        $freePlan = Plan::where('slug', 'free')->first();
+        if ($freePlan) {
+            Subscription::create([
+                'user_id' => $user->id,
+                'plan_id' => $freePlan->id,
+                'status' => 'active',
+                'started_at' => now(),
+                'ends_at' => null, // Freeプランは無期限
+            ]);
+        }
 
         event(new Registered($user));
 

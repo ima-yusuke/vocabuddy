@@ -56,11 +56,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// プロフィール管理（認証必須）
+// マイページ（認証必須）
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/mypage', [ProfileController::class, 'edit'])->name('mypage');
+    Route::patch('/mypage', [ProfileController::class, 'update'])->name('mypage.update');
+    Route::delete('/mypage', [ProfileController::class, 'destroy'])->name('mypage.destroy');
 });
 
 require __DIR__.'/auth.php';

@@ -19,6 +19,9 @@
                     <a href="{{ route('ShowReplyHistory') }}" class="text-sm font-medium {{ request()->routeIs('ShowReplyHistory') ? 'text-black' : 'text-gray-700 hover:text-black' }} transition">
                         返信履歴
                     </a>
+                    <a href="{{ route('mypage') }}" class="text-sm font-medium {{ request()->routeIs('mypage') ? 'text-black' : 'text-gray-700 hover:text-black' }} transition">
+                        マイページ
+                    </a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="text-sm font-medium text-gray-700 hover:text-black transition">

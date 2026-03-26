@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'check.word.limit' => \App\Http\Middleware\CheckWordLimit::class,
+            'check.ai.usage' => \App\Http\Middleware\CheckAiUsageLimit::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

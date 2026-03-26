@@ -46,7 +46,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/reply-assistant/generate', [ReplyController::class, 'GenerateReply'])->name('GenerateReply');
 
     // AI自動補完
-    Route::post('/word/autocomplete', [WordAutoCompleteController::class, 'autocomplete'])->name('AutocompleteWord');
+    Route::post('/word/autocomplete', [WordAutoCompleteController::class, 'autocomplete'])
+        ->middleware('check.ai.usage:autocomplete')
+        ->name('AutocompleteWord');
 });
 
 // ダッシュボード（認証必須）

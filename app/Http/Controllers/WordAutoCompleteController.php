@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\AiUsageLog;
 
 class WordAutoCompleteController extends Controller
 {
@@ -34,6 +35,15 @@ class WordAutoCompleteController extends Controller
             $aiData = $this->formatWithAI($word, $context, $dictionaryData);
 
             Log::info('Autocomplete successful', ['word' => $word]);
+
+            // AI使用ログを記録
+            AiUsageLog::create([
+                'user_id' => auth()->id(),
+                'type' => 'autocomplete',
+                'tokens_used' => null, // Gemini APIではトークン数が取得できない
+                'model_used' => 'gemini-2.5-flash',
+                'created_at' => now(),
+            ]);
 
             return response()->json([
                 'success' => true,

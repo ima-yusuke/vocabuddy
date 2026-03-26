@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Word;
 use App\Models\ReplyTemplate;
+use App\Models\AiUsageLog;
 use App\Services\GeminiEmbeddingService;
 
 class ReplyController extends Controller
@@ -79,8 +81,17 @@ class ReplyController extends Controller
         $replyIntent = $request->input('reply_intent');
         $relationship = $request->input('relationship');
 
+        // キャッシュキーを生成（入力パラメータのハッシュ）
+        $cacheKey = 'ai_reply_' . md5($friendMessage . $replyIntent . $relationship . auth()->id());
+
+        // キャッシュをチェック（24時間）
+        if (Cache::has($cacheKey)) {
+            $cachedResult = Cache::get($cacheKey);
+            return view('reply-result', $cachedResult);
+        }
+
         // 単語帳の全単語を取得
-        $words = Word::with('japanese')->get();
+        $words = Word::with('japanese')->where('user_id', auth()->id())->get();
 
         // 単語帳の単語リストを作成（英単語のみ）
         $wordList = $words->map(function($word) {
@@ -138,9 +149,12 @@ class ReplyController extends Controller
 【使用した単語帳の単語】
 (使用した場合のみ: 単語1, 単語2)";
 
+        // プランに応じたモデル名を取得
+        $modelName = auth()->user()->getAiModelName('gemini-3-flash-preview');
+
         try {
             $response = Http::timeout(30)->post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key={$apiKey}",
+                "https://generativelanguage.googleapis.com/v1beta/models/{$modelName}:generateContent?key={$apiKey}",
                 [
                     'contents' => [
                         [
@@ -213,7 +227,20 @@ class ReplyController extends Controller
                     'embedding' => $embedding,
                 ]);
 
-                return view('reply-result', compact('friendMessage', 'replyIntent', 'generatedText', 'englishReply', 'usedWords'));
+                // AI使用ログを記録
+                AiUsageLog::create([
+                    'user_id' => auth()->id(),
+                    'type' => 'reply',
+                    'tokens_used' => null,
+                    'model_used' => $modelName,
+                    'created_at' => now(),
+                ]);
+
+                // 結果を24時間キャッシュ
+                $resultData = compact('friendMessage', 'replyIntent', 'generatedText', 'englishReply', 'usedWords');
+                Cache::put($cacheKey, $resultData, now()->addHours(24));
+
+                return view('reply-result', $resultData);
             } else {
                 return back()->with('error', 'APIリクエストに失敗しました: ' . $response->body());
             }

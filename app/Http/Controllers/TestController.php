@@ -121,11 +121,14 @@ class TestController extends Controller
 
         \Log::info('Words selected for questions', ['selected_count' => $selectedWords->count()]);
 
+        // プランに応じたモデル名を取得
+        $modelName = auth()->user()->getAiModelName('gemini-3-flash-preview');
+
         // 1回のAPI呼び出しで全問題を生成
         $apiKey = config('services.gemini.api_key');
         $questions = [];
 
-        \Log::info('API Key check', ['has_key' => !empty($apiKey)]);
+        \Log::info('API Key check', ['has_key' => !empty($apiKey), 'model' => $modelName]);
 
         if ($apiKey) {
             // プロンプト用に単語リストを作成
@@ -168,11 +171,11 @@ class TestController extends Controller
 
             try {
                 \Log::info('=== Calling Gemini API for batch test generation ===');
-                \Log::info('API URL', ['url' => "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent"]);
+                \Log::info('API URL', ['url' => "https://generativelanguage.googleapis.com/v1beta/models/{$modelName}:generateContent"]);
                 \Log::info('Prompt preview', ['prompt_length' => strlen($prompt), 'word_count' => $selectedWords->count()]);
 
                 $response = Http::timeout(30)->post(
-                    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key={$apiKey}",
+                    "https://generativelanguage.googleapis.com/v1beta/models/{$modelName}:generateContent?key={$apiKey}",
                     [
                         'contents' => [
                             [

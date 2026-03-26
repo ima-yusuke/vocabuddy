@@ -108,4 +108,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(WeakWord::class);
     }
+
+    /**
+     * プランに応じたAIモデル名を取得
+     *
+     * @param string $defaultModel コントローラーで使用中のデフォルトモデル
+     * @return string
+     */
+    public function getAiModelName(string $defaultModel = 'gemini-2.5-flash'): string
+    {
+        $plan = $this->currentPlan();
+
+        // Adminプランは現在のモデルをそのまま使用
+        if ($plan->slug === 'admin') {
+            return $defaultModel;
+        }
+
+        // プランのai_modelフィールドに基づいてモデル名を決定
+        return match($plan->ai_model) {
+            'pro' => 'gemini-2.0-flash-exp', // Pro/Premium用の高性能モデル
+            'flash' => 'gemini-2.5-flash', // Free/Basic用の軽量モデル
+            default => 'gemini-2.5-flash', // デフォルトは軽量モデル
+        };
+    }
 }

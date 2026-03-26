@@ -20,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(UrlGenerator $url): void
     {
-//        $url->forceScheme('https');
+        // 本番環境のみHTTPSを強制（ローカル環境ではHTTP）
+        if ($this->app->environment('production')) {
+            $url->forceScheme('https');
+        }
     }
 }

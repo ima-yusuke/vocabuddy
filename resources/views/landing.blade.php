@@ -240,6 +240,137 @@
         </div>
     </section>
 
+    <!-- 単語帳デモセクション -->
+    <section class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    単語登録はたった10秒
+                </h2>
+                <p class="text-xl text-gray-600">AI自動補完で辞書を引く手間を削減</p>
+            </div>
+
+            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+                <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 space-y-6">
+                    <!-- 単語入力 -->
+                    <div>
+                        <label class="block text-sm font-bold text-black mb-2">英単語</label>
+                        <div class="bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-3 min-h-[50px] flex items-center">
+                            <p id="word-demo-input" class="text-gray-800 text-lg font-semibold"></p>
+                        </div>
+                    </div>
+
+                    <!-- AI補完ボタン -->
+                    <div class="text-center">
+                        <button id="word-demo-button"
+                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span id="word-demo-button-text">AIで意味を補完</span>
+                        </button>
+                    </div>
+
+                    <!-- ローディング -->
+                    <div id="word-demo-loading" class="hidden">
+                        <div class="bg-[#ffeb54]/20 border-2 border-black rounded-xl p-6 text-center">
+                            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
+                                <div class="w-8 h-8 border-4 border-[#ffeb54] border-t-black rounded-full animate-spin"></div>
+                            </div>
+                            <p class="text-black font-semibold">AI が単語情報を取得中...</p>
+                        </div>
+                    </div>
+
+                    <!-- 結果表示 -->
+                    <div id="word-demo-result" class="hidden space-y-4">
+                        <div class="bg-[#ffeb54]/10 border-2 border-[#ffeb54] rounded-xl p-6">
+                            <h4 class="text-lg font-bold text-black mb-4 flex items-center">
+                                <svg class="w-6 h-6 mr-2 text-[#ffeb54]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                AI補完結果
+                            </h4>
+
+                            <div class="space-y-3">
+                                <div class="bg-white rounded-xl p-4">
+                                    <p class="text-sm text-gray-600 mb-1">発音</p>
+                                    <p id="word-demo-pronunciation" class="text-lg font-semibold text-black"></p>
+                                </div>
+                                <div class="bg-white rounded-xl p-4">
+                                    <p class="text-sm text-gray-600 mb-1">品詞</p>
+                                    <p id="word-demo-pos" class="text-lg font-semibold text-black"></p>
+                                </div>
+                                <div class="bg-white rounded-xl p-4">
+                                    <p class="text-sm text-gray-600 mb-1">意味</p>
+                                    <p id="word-demo-meaning" class="text-lg text-black leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 登録ボタン -->
+                        <div class="text-center pt-2">
+                            <button id="word-demo-register"
+                                class="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50">
+                                <span id="word-demo-register-text">単語帳に登録</span>
+                            </button>
+                        </div>
+
+                        <!-- 登録完了 -->
+                        <div id="word-demo-registered" class="hidden">
+                            <div class="bg-green-50 border-2 border-green-500 rounded-xl p-4 text-center">
+                                <p class="text-green-700 font-bold text-lg">✓ 単語帳に追加されました！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <p class="text-gray-700 text-lg mb-4">辞書を引く時間が90%削減されます</p>
+                    <a href="{{ route('register') }}"
+                        class="inline-block bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1">
+                        無料で始める →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 価値提案セクション -->
+    <section class="py-20 bg-yellow">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="inline-block bg-black text-white px-6 py-2 rounded-full text-sm font-bold mb-6">
+                    ここが違う！
+                </div>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                    登録するだけじゃない。<br>
+                    <span class="text-5xl md:text-7xl">学んだ単語を<br class="md:hidden">リアルで使える！</span>
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-800 leading-relaxed mb-8 max-w-3xl mx-auto">
+                    VocaBuddyは、あなたが登録した単語を使った返信文をAIが自動生成。<br class="hidden md:block">
+                    単語を「覚える」だけでなく「実際に使う」練習ができます。
+                </p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-12">
+                    <div class="flex items-center bg-white rounded-2xl border-2 border-black px-8 py-6 shadow-lg">
+                        <div class="text-5xl mr-4">📚</div>
+                        <div class="text-left">
+                            <p class="text-sm text-gray-600 font-semibold">STEP 1</p>
+                            <p class="text-xl font-bold">単語を登録</p>
+                        </div>
+                    </div>
+                    <div class="text-4xl font-bold hidden md:block">→</div>
+                    <div class="text-4xl font-bold md:hidden">↓</div>
+                    <div class="flex items-center bg-white rounded-2xl border-2 border-black px-8 py-6 shadow-lg">
+                        <div class="text-5xl mr-4">💬</div>
+                        <div class="text-left">
+                            <p class="text-sm text-gray-600 font-semibold">STEP 2</p>
+                            <p class="text-xl font-bold">AIが返信文を生成</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-6xl mx-auto"></div>
+
     <!-- AI返信デモセクション -->
     <section class="py-20 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -552,6 +683,145 @@
     </footer>
 
     <script>
+        // 単語帳デモアニメーション
+        const wordDemoData = {
+            word: "serendipity",
+            pronunciation: "セレンディピティ",
+            pos: "名詞",
+            meaning: "思いがけない幸運な発見、偶然の出会い"
+        };
+
+        let isWordAnimating = false;
+        let wordAutoReplayTimeout;
+
+        async function typeTextWord(element, text, speed = 50) {
+            element.textContent = '';
+            for (let i = 0; i < text.length; i++) {
+                element.textContent += text[i];
+                await new Promise(resolve => setTimeout(resolve, speed));
+            }
+        }
+
+        async function runWordDemo() {
+            if (isWordAnimating) return;
+            isWordAnimating = true;
+
+            const inputEl = document.getElementById('word-demo-input');
+            const buttonEl = document.getElementById('word-demo-button');
+            const buttonTextEl = document.getElementById('word-demo-button-text');
+            const loadingEl = document.getElementById('word-demo-loading');
+            const resultEl = document.getElementById('word-demo-result');
+            const pronunciationEl = document.getElementById('word-demo-pronunciation');
+            const posEl = document.getElementById('word-demo-pos');
+            const meaningEl = document.getElementById('word-demo-meaning');
+            const registerBtn = document.getElementById('word-demo-register');
+            const registerTextEl = document.getElementById('word-demo-register-text');
+            const registeredEl = document.getElementById('word-demo-registered');
+
+            // リセット
+            inputEl.textContent = '';
+            loadingEl.classList.add('hidden');
+            resultEl.classList.add('hidden');
+            registeredEl.classList.add('hidden');
+            pronunciationEl.textContent = '';
+            posEl.textContent = '';
+            meaningEl.textContent = '';
+            buttonEl.disabled = true;
+            buttonTextEl.textContent = '入力中...';
+            registerBtn.disabled = true;
+
+            // 単語をタイピング
+            await typeTextWord(inputEl, wordDemoData.word, 100);
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // ボタンを有効化
+            buttonEl.disabled = false;
+            buttonTextEl.textContent = 'AIで意味を補完';
+
+            // 自動クリック
+            await new Promise(resolve => setTimeout(resolve, 500));
+            buttonEl.disabled = true;
+            buttonTextEl.textContent = '取得中...';
+
+            // ローディング表示
+            loadingEl.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // ローディング非表示
+            loadingEl.classList.add('hidden');
+
+            // 結果を表示
+            resultEl.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            pronunciationEl.textContent = wordDemoData.pronunciation;
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            posEl.textContent = wordDemoData.pos;
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            await typeTextWord(meaningEl, wordDemoData.meaning, 40);
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // 登録ボタン有効化
+            registerBtn.disabled = false;
+            registerTextEl.textContent = '単語帳に登録';
+
+            // 自動クリック
+            await new Promise(resolve => setTimeout(resolve, 800));
+            registerBtn.disabled = true;
+            registerTextEl.textContent = '登録中...';
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 登録完了
+            registeredEl.classList.remove('hidden');
+            registerBtn.disabled = false;
+            registerTextEl.textContent = 'もう一度見る';
+
+            // 完了
+            buttonEl.disabled = false;
+            buttonTextEl.textContent = 'もう一度見る';
+            isWordAnimating = false;
+
+            // 5秒後に自動でリプレイ
+            wordAutoReplayTimeout = setTimeout(() => {
+                runWordDemo();
+            }, 5000);
+        }
+
+        // 単語デモボタンクリックイベント
+        document.getElementById('word-demo-button').addEventListener('click', () => {
+            clearTimeout(wordAutoReplayTimeout);
+            runWordDemo();
+        });
+
+        document.getElementById('word-demo-register').addEventListener('click', () => {
+            clearTimeout(wordAutoReplayTimeout);
+            runWordDemo();
+        });
+
+        // ページ読み込み時に自動で開始
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runWordDemo();
+            }, 1000);
+        });
+
+        // Intersection Observerでビューポートに入ったら開始
+        const wordDemoSection = document.querySelector('#word-demo-button').closest('section');
+        const wordObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isWordAnimating) {
+                    clearTimeout(wordAutoReplayTimeout);
+                    setTimeout(() => runWordDemo(), 500);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        if (wordDemoSection) {
+            wordObserver.observe(wordDemoSection);
+        }
+
         // AI返信デモアニメーション
         const demoData = {
             english: "Hey! How have you been? It's been a while since we last caught up!",
@@ -638,12 +908,8 @@
             runDemo();
         });
 
-        // ページ読み込み時に自動で開始
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                runDemo();
-            }, 2000);
-        });
+        // ページ読み込み時は自動開始しない（単語帳デモを優先）
+        // ビューポートに入ったときのみ開始
 
         // Intersection Observerでビューポートに入ったら開始
         const demoSection = document.querySelector('#demo-button').closest('section');

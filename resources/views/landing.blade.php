@@ -642,7 +642,7 @@
         window.addEventListener('load', () => {
             setTimeout(() => {
                 runDemo();
-            }, 1000);
+            }, 2000);
         });
 
         // Intersection Observerでビューポートに入ったら開始

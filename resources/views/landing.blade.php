@@ -44,23 +44,182 @@
             color: var(--color-primary);
         }
 
+        /* Page Load Animation System */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background-color: var(--color-primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            overflow: hidden;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-text-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loader-text {
+            position: absolute;
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--color-black);
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 640px) {
+            .loader-text {
+                font-size: 6.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .loader-text {
+                font-size: 8rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .loader-text {
+                font-size: 10rem;
+            }
+        }
+
+        /* Character wrapper for individual animation */
+        .loader-char {
+            display: inline-block;
+            opacity: 0;
+        }
+
+        /* First text: characters appear one by one (fast), then fall down one by one */
+        .loader-text-1 .loader-char {
+            animation: charFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+                       charFallDown 0.4s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+            animation-delay: calc(var(--char-index) * 0.05s),
+                           calc(1.4s + var(--char-index) * 0.06s);
+        }
+
+        /* Second text: characters appear one by one (fast), then fall down one by one */
+        .loader-text-2 .loader-char {
+            animation: charFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+                       charFallDown 0.4s cubic-bezier(0.6, 0, 0.4, 1) forwards;
+            animation-delay: calc(2.2s + var(--char-index) * 0.05s),
+                           calc(3.6s + var(--char-index) * 0.06s);
+        }
+
+        @keyframes charFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes charFallDown {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        /* Staggered Content Entrance */
+        .content-hidden {
+            opacity: 0;
+        }
+
         .animate-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             opacity: 0;
         }
 
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-700 { animation-delay: 0.7s; }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .page-loader {
+                transition: opacity 0.2s linear, visibility 0.2s;
+            }
+            .loader-char {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .animate-fade-in,
+            .animate-slide-up,
+            .animate-scale-in {
+                animation: none;
+                opacity: 1;
+                transform: none;
             }
         }
 
@@ -94,14 +253,17 @@
             transform: translateY(-2px);
         }
 
-        .section-divider {
-            height: 1px;
-            background-color: #E5E5E5;
-            margin: 4rem 0;
-        }
     </style>
 </head>
 <body class="antialiased">
+    <!-- Page Loader -->
+    <div id="page-loader" class="page-loader">
+        <div class="loader-text-container">
+            <div class="loader-text loader-text-1">英語学習</div>
+            <div class="loader-text loader-text-2">変えよう</div>
+        </div>
+    </div>
+
     <x-side-menu></x-side-menu>
     <x-navigation></x-navigation>
 
@@ -109,19 +271,19 @@
     <section class="pt-32 pb-20 md:pt-40 md:pb-32 bg-yellow">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto text-center">
-                <div class="inline-block mb-6 px-4 py-2 bg-black text-white rounded-full animate-fade-in">
+                <div class="inline-block mb-6 px-4 py-2 bg-black text-white rounded-full animate-scale-in delay-100">
                     <span class="text-sm font-medium">✨ 20単語まで完全無料</span>
                 </div>
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in delay-100">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up delay-200">
                     映画や日常で<br>
                     出会った英単語を、<br>
                     自分だけの単語帳に
                 </h1>
-                <p class="text-xl md:text-2xl mb-10 leading-relaxed animate-fade-in delay-200">
+                <p class="text-xl md:text-2xl mb-10 leading-relaxed animate-fade-in delay-400">
                     AIが自動補完。返信文も生成。<br>
                     クレジットカード不要で今すぐ始められる
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-300">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-500">
                     <a href="{{ route('register') }}" class="btn-primary px-10 py-4 rounded-full text-lg font-medium">
                         無料で始める
                     </a>
@@ -192,8 +354,6 @@
         </div>
     </section>
 
-    <div class="section-divider max-w-6xl mx-auto"></div>
-
     <!-- 主要機能セクション -->
     <section id="features" class="py-20 bg-yellow">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -250,7 +410,12 @@
                 <p class="text-xl text-gray-600">AI自動補完で辞書を引く手間を削減</p>
             </div>
 
-            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+            <div id="word-demo-container" class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+                <div class="text-center mb-6">
+                    <button id="word-demo-start-btn" class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+                        デモスタート
+                    </button>
+                </div>
                 <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 space-y-6">
                     <!-- 単語入力 -->
                     <div>
@@ -301,6 +466,14 @@
                                     <p class="text-sm text-gray-600 mb-1">意味</p>
                                     <p id="word-demo-meaning" class="text-lg text-black leading-relaxed"></p>
                                 </div>
+                                <div class="bg-white rounded-xl p-4">
+                                    <p class="text-sm text-gray-600 mb-1">例文（英語）</p>
+                                    <p id="word-demo-example-en" class="text-lg text-black leading-relaxed"></p>
+                                </div>
+                                <div class="bg-white rounded-xl p-4">
+                                    <p class="text-sm text-gray-600 mb-1">例文（日本語）</p>
+                                    <p id="word-demo-example-ja" class="text-lg text-black leading-relaxed"></p>
+                                </div>
                             </div>
                         </div>
 
@@ -320,13 +493,169 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="text-center mt-8">
-                    <p class="text-gray-700 text-lg mb-4">辞書を引く時間が90%削減されます</p>
-                    <a href="{{ route('register') }}"
-                        class="inline-block bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1">
-                        無料で始める →
-                    </a>
+    <!-- CTA: 単語登録 -->
+    <section class="relative py-24 md:py-32 bg-[#ffeb54] overflow-hidden">
+        <!-- Decorative geometric elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 border-4 border-black/5 rounded-full -mr-32 -mt-32"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 border-4 border-black/5 rotate-45 -ml-24 -mb-24"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-block mb-4">
+                <p class="text-sm font-bold tracking-[0.3em] uppercase text-black/60">Experience Fast</p>
+            </div>
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight">
+                10秒で単語登録を<br class="hidden md:block">体験しよう
+            </h2>
+            <p class="text-lg md:text-xl text-black/70 mb-12 max-w-2xl mx-auto">
+                辞書を引く時間が90%削減。AIが自動で補完するから、<br class="hidden md:block">
+                英単語学習がこれまでにないスピード感に
+            </p>
+            <a href="{{ route('register') }}"
+                class="group inline-block bg-black hover:bg-black/90 text-white px-12 py-6 rounded-full text-lg md:text-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-[0_8px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_12px_0_0_rgba(0,0,0,0.2)] active:translate-y-1 active:shadow-[0_4px_0_0_rgba(0,0,0,0.2)]">
+                無料で始める
+                <span class="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- 単語テストデモセクション -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    単語テストで定着を確認
+                </h2>
+                <p class="text-xl text-gray-600">4択クイズで楽しく学習</p>
+            </div>
+
+            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+                <div class="bg-white border-2 border-black rounded-2xl p-8 md:p-10">
+                    <div class="text-center mb-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#ffeb54]">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-xl font-semibold text-black mb-4">
+                            この単語の意味は？
+                        </h2>
+                    </div>
+
+                    <div class="my-12 text-center">
+                        <div class="inline-block">
+                            <p class="text-4xl md:text-5xl font-bold text-black tracking-wide">study</p>
+                            <div class="h-1 bg-[#ffeb54] mt-4 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-10 bg-[#ffeb54]/10 rounded-xl p-6 border border-black">
+                        <div class="flex items-center mb-3">
+                            <svg class="w-5 h-5 mr-2 text-[#ffeb54]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold text-black">例文</span>
+                        </div>
+                        <p class="text-black italic leading-relaxed">I need to study English for the exam.</p>
+                    </div>
+
+                    <div id="test-choices" class="space-y-4">
+                        <button data-answer="A" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                            <div class="flex items-center">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                    A
+                                </span>
+                                <span class="text-black font-medium">旅行する、旅する</span>
+                            </div>
+                        </button>
+
+                        <button data-answer="B" data-correct="true" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                            <div class="flex items-center">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                    B
+                                </span>
+                                <span class="text-black font-medium">勉強する、研究する</span>
+                            </div>
+                        </button>
+
+                        <button data-answer="C" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                            <div class="flex items-center">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                    C
+                                </span>
+                                <span class="text-black font-medium">働く、仕事をする</span>
+                            </div>
+                        </button>
+
+                        <button data-answer="D" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                            <div class="flex items-center">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                    D
+                                </span>
+                                <span class="text-black font-medium">教える、指導する</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- 結果表示 -->
+                    <div id="test-result" class="hidden mt-6">
+                        <div id="test-result-message" class="text-center p-6 rounded-xl border-2 mb-4">
+                            <p class="text-xl font-bold mb-2"></p>
+                            <p class="text-sm"></p>
+                        </div>
+                        <button id="test-retry-btn" class="w-full bg-black hover:bg-gray-800 text-white px-6 py-4 rounded-xl font-bold transition-all duration-300 transform hover:-translate-y-1">
+                            もう一度挑戦
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA: 単語テスト -->
+    <section class="relative py-24 md:py-32 bg-white overflow-hidden">
+        <!-- Decorative line pattern -->
+        <div class="absolute inset-0 opacity-[0.02]">
+            <div class="absolute top-0 left-1/4 w-px h-full bg-black"></div>
+            <div class="absolute top-0 left-2/4 w-px h-full bg-black"></div>
+            <div class="absolute top-0 left-3/4 w-px h-full bg-black"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left: Text content -->
+                <div class="text-center md:text-left">
+                    <div class="inline-block mb-4">
+                        <p class="text-sm font-bold tracking-[0.3em] uppercase text-black/40">Make It Stick</p>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-black mb-6 leading-tight">
+                        クイズで楽しく<br>
+                        単語を定着させよう
+                    </h2>
+                    <p class="text-lg md:text-xl text-black/60 mb-8">
+                        ゲーム感覚で記憶に定着。<br>
+                        自分の単語帳から自動生成される4択クイズ
+                    </p>
+                </div>
+
+                <!-- Right: CTA -->
+                <div class="flex flex-col items-center md:items-end">
+                    <div class="relative">
+                        <!-- Yellow accent box -->
+                        <div class="absolute -inset-6 bg-[#ffeb54] rounded-3xl transform rotate-3"></div>
+                        <div class="relative bg-black rounded-3xl p-10 md:p-12 text-center transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+                            <div class="text-[#ffeb54] text-5xl md:text-6xl font-black mb-4">Quiz</div>
+                            <a href="{{ route('register') }}"
+                                class="inline-block bg-[#ffeb54] hover:bg-[#ffeb54]/90 text-black px-10 py-5 rounded-full text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                無料で始める →
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -369,8 +698,6 @@
         </div>
     </section>
 
-    <div class="section-divider max-w-6xl mx-auto"></div>
-
     <!-- AI返信デモセクション -->
     <section class="py-20 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -381,18 +708,77 @@
                 <p class="text-xl text-gray-600">実際の動作を見てみましょう</p>
             </div>
 
-            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+            <div id="reply-demo-container" class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+                <div class="text-center mb-6">
+                    <button id="reply-demo-start-btn" class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+                        デモスタート
+                    </button>
+                </div>
                 <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 space-y-6">
                     <!-- 英文入力 -->
-                    <div>
+                    <div class="relative">
+                        <div id="demo-step-1" class="hidden mb-3">
+                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                                ステップ1：相手からの英文を入力
+                            </span>
+                        </div>
                         <label class="block text-sm font-bold text-black mb-2">友達からのメッセージ</label>
                         <div class="bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-3 min-h-[60px] flex items-center">
                             <p id="demo-english" class="text-gray-800 text-lg"></p>
                         </div>
                     </div>
 
+                    <!-- カテゴリー選択 -->
+                    <div class="relative">
+                        <div id="demo-step-2" class="hidden mb-3">
+                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                                ステップ2：カテゴリを選択
+                            </span>
+                        </div>
+                        <label class="block text-sm font-bold text-black mb-3">相手との関係性</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div id="demo-category-friend" class="bg-white border-2 border-gray-300 rounded-xl px-4 py-3 transition-all duration-200 opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span class="text-sm font-semibold text-gray-400">友人</span>
+                                </div>
+                            </div>
+                            <div id="demo-category-work" class="bg-white border-2 border-gray-300 rounded-xl px-4 py-3 transition-all duration-200 opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="text-sm font-semibold text-gray-400">仕事</span>
+                                </div>
+                            </div>
+                            <div id="demo-category-romantic" class="bg-white border-2 border-gray-300 rounded-xl px-4 py-3 transition-all duration-200 opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    <span class="text-sm font-semibold text-gray-400">恋人</span>
+                                </div>
+                            </div>
+                            <div id="demo-category-family" class="bg-white border-2 border-gray-300 rounded-xl px-4 py-3 transition-all duration-200 opacity-50">
+                                <div class="flex flex-col items-center">
+                                    <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    <span class="text-sm font-semibold text-gray-400">家族</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 日本語入力 -->
-                    <div>
+                    <div class="relative">
+                        <div id="demo-step-3" class="hidden mb-3">
+                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                                ステップ3：返信したい内容を日本語で入力
+                            </span>
+                        </div>
                         <label class="block text-sm font-bold text-black mb-2">返信したい内容（日本語）</label>
                         <div class="bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-3 min-h-[60px] flex items-center">
                             <p id="demo-japanese" class="text-gray-800 text-lg"></p>
@@ -400,7 +786,12 @@
                     </div>
 
                     <!-- AI生成ボタン -->
-                    <div class="text-center">
+                    <div class="relative text-center">
+                        <div id="demo-step-4" class="hidden mb-3 flex justify-center">
+                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                                ステップ4：AIが文章作成
+                            </span>
+                        </div>
                         <button id="demo-button"
                             class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                             <span id="demo-button-text">AI返信を生成</span>
@@ -432,20 +823,79 @@
                             <p class="text-sm text-gray-600">💡 あなたが登録した単語を使った自然な英語の返信文を生成します</p>
                         </div>
                     </div>
-                </div>
 
-                <div class="text-center mt-8">
-                    <p class="text-gray-700 text-lg mb-4">このような返信文を自動で作成できます</p>
-                    <a href="{{ route('register') }}"
-                        class="inline-block bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1">
-                        無料で始める →
-                    </a>
+                    <!-- 使用された単語 -->
+                    <div id="demo-used-words" class="hidden">
+                        <div class="bg-white border-2 border-black rounded-xl p-6">
+                            <h4 class="text-sm font-bold text-black mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-[#ffeb54]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                使用された単語帳の単語
+                            </h4>
+                            <div class="bg-gradient-to-br from-white to-[#ffeb54]/10 border border-[#ffeb54]/30 rounded-xl p-5">
+                                <p class="font-bold text-black text-lg mb-2">study</p>
+                                <div class="space-y-1">
+                                    <p class="text-sm text-black">・勉強する、研究する</p>
+                                    <p class="text-sm text-black">・勉強、研究</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="section-divider max-w-6xl mx-auto"></div>
+    <!-- CTA: AI返信 -->
+    <section class="relative py-24 md:py-32 bg-black overflow-hidden">
+        <!-- Decorative grid pattern -->
+        <div class="absolute inset-0 opacity-[0.03]">
+            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 1px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 1px, transparent 1px, transparent 60px);"></div>
+        </div>
+
+        <!-- Yellow accent shapes -->
+        <div class="absolute top-1/4 right-0 w-96 h-96 bg-[#ffeb54]/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-[#ffeb54]/10 rounded-full blur-3xl"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-block mb-6">
+                <p class="text-sm font-bold tracking-[0.3em] uppercase text-white/50">Put Words Into Practice</p>
+            </div>
+
+            <!-- Large centered headline -->
+            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 leading-tight max-w-4xl mx-auto">
+                学んだ単語を<br>
+                <span class="relative inline-block">
+                    実際に使ってみよう
+                    <span class="absolute bottom-0 left-0 w-full h-3 md:h-4 bg-[#ffeb54] -z-10"></span>
+                </span>
+            </h2>
+
+            <p class="text-lg md:text-2xl text-white/70 mb-16 max-w-3xl mx-auto leading-relaxed">
+                AIがあなたの単語帳から最適な単語を選んで、<br class="hidden md:block">
+                自然な英語の返信文を生成。覚えるだけじゃない、使える英語へ
+            </p>
+
+            <!-- Multi-button CTA -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="{{ route('register') }}"
+                    class="group relative bg-[#ffeb54] hover:bg-[#ffeb54]/90 text-black px-14 py-6 rounded-full text-lg md:text-xl font-black transition-all duration-300 transform hover:scale-105 shadow-[0_0_40px_rgba(255,235,84,0.3)] hover:shadow-[0_0_60px_rgba(255,235,84,0.5)]">
+                    <span class="relative z-10">無料で始める</span>
+                    <span class="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-300"></span>
+                </a>
+
+                <div class="flex items-center gap-4 text-white/60">
+                    <div class="flex -space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-[#ffeb54] border-2 border-black"></div>
+                        <div class="w-10 h-10 rounded-full bg-white border-2 border-black"></div>
+                        <div class="w-10 h-10 rounded-full bg-[#ffeb54] border-2 border-black"></div>
+                    </div>
+                    <p class="text-sm font-medium">20単語まで完全無料</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 統計データセクション -->
     <section class="py-20 bg-white">
@@ -535,8 +985,6 @@
             </div>
         </div>
     </section>
-
-    <div class="section-divider max-w-6xl mx-auto"></div>
 
     <!-- 使い方セクション -->
     <section class="py-20 bg-white">
@@ -685,10 +1133,12 @@
     <script>
         // 単語帳デモアニメーション
         const wordDemoData = {
-            word: "serendipity",
-            pronunciation: "セレンディピティ",
-            pos: "名詞",
-            meaning: "思いがけない幸運な発見、偶然の出会い"
+            word: "study",
+            pronunciation: "スタディ",
+            pos: "動詞/名詞",
+            meaning: "勉強する、研究する / 勉強、研究",
+            exampleEn: "I need to study English for the exam.",
+            exampleJa: "試験のために英語を勉強する必要があります。"
         };
 
         let isWordAnimating = false;
@@ -714,6 +1164,8 @@
             const pronunciationEl = document.getElementById('word-demo-pronunciation');
             const posEl = document.getElementById('word-demo-pos');
             const meaningEl = document.getElementById('word-demo-meaning');
+            const exampleEnEl = document.getElementById('word-demo-example-en');
+            const exampleJaEl = document.getElementById('word-demo-example-ja');
             const registerBtn = document.getElementById('word-demo-register');
             const registerTextEl = document.getElementById('word-demo-register-text');
             const registeredEl = document.getElementById('word-demo-registered');
@@ -726,9 +1178,12 @@
             pronunciationEl.textContent = '';
             posEl.textContent = '';
             meaningEl.textContent = '';
+            exampleEnEl.textContent = '';
+            exampleJaEl.textContent = '';
             buttonEl.disabled = true;
             buttonTextEl.textContent = '入力中...';
             registerBtn.disabled = true;
+            registerBtn.style.display = 'block';
 
             // 単語をタイピング
             await typeTextWord(inputEl, wordDemoData.word, 100);
@@ -761,6 +1216,14 @@
             await new Promise(resolve => setTimeout(resolve, 300));
 
             await typeTextWord(meaningEl, wordDemoData.meaning, 40);
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // 例文（英語）を表示
+            await typeTextWord(exampleEnEl, wordDemoData.exampleEn, 30);
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // 例文（日本語）を表示
+            await typeTextWord(exampleJaEl, wordDemoData.exampleJa, 40);
             await new Promise(resolve => setTimeout(resolve, 800));
 
             // 登録ボタン有効化
@@ -773,47 +1236,82 @@
             registerTextEl.textContent = '登録中...';
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // 登録完了
+            // 登録完了（登録ボタンを非表示にする）
             registeredEl.classList.remove('hidden');
-            registerBtn.disabled = false;
-            registerTextEl.textContent = 'もう一度見る';
+            registerBtn.style.display = 'none';
 
             // 完了
             buttonEl.disabled = false;
             buttonTextEl.textContent = 'もう一度見る';
             isWordAnimating = false;
 
-            // 5秒後に自動でリプレイ
-            wordAutoReplayTimeout = setTimeout(() => {
-                runWordDemo();
-            }, 5000);
+            // デモスタートボタンを再度有効化
+            const startBtn = document.getElementById('word-demo-start-btn');
+            startBtn.disabled = false;
+            startBtn.textContent = 'デモスタート';
         }
+
+        // 単語デモスタートボタンクリックイベント
+        document.getElementById('word-demo-start-btn').addEventListener('click', () => {
+            const startBtn = document.getElementById('word-demo-start-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'アニメーション実行中...';
+            clearTimeout(wordAutoReplayTimeout);
+            runWordDemo();
+        });
 
         // 単語デモボタンクリックイベント
         document.getElementById('word-demo-button').addEventListener('click', () => {
+            const startBtn = document.getElementById('word-demo-start-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'アニメーション実行中...';
             clearTimeout(wordAutoReplayTimeout);
             runWordDemo();
         });
 
         document.getElementById('word-demo-register').addEventListener('click', () => {
+            const startBtn = document.getElementById('word-demo-start-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'アニメーション実行中...';
             clearTimeout(wordAutoReplayTimeout);
             runWordDemo();
         });
 
-        // ページ読み込み時に自動で開始
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                runWordDemo();
-            }, 1000);
-        });
-
-        // Intersection Observerでビューポートに入ったら開始
-        const wordDemoSection = document.querySelector('#word-demo-button').closest('section');
+        // Intersection Observerで画面外に出たら停止
+        const wordDemoSection = document.querySelector('#word-demo-button')?.closest('section');
         const wordObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !isWordAnimating) {
+                if (!entry.isIntersecting) {
+                    // 画面外に出たらアニメーションを停止
                     clearTimeout(wordAutoReplayTimeout);
-                    setTimeout(() => runWordDemo(), 500);
+                    isWordAnimating = false;
+
+                    // UI要素をリセット
+                    const inputEl = document.getElementById('word-demo-input');
+                    const buttonEl = document.getElementById('word-demo-button');
+                    const buttonTextEl = document.getElementById('word-demo-button-text');
+                    const loadingEl = document.getElementById('word-demo-loading');
+                    const resultEl = document.getElementById('word-demo-result');
+                    const registeredEl = document.getElementById('word-demo-registered');
+                    const registerBtn = document.getElementById('word-demo-register');
+                    const startBtn = document.getElementById('word-demo-start-btn');
+
+                    if (inputEl) inputEl.textContent = '';
+                    if (loadingEl) loadingEl.classList.add('hidden');
+                    if (resultEl) resultEl.classList.add('hidden');
+                    if (registeredEl) registeredEl.classList.add('hidden');
+                    if (buttonEl) {
+                        buttonEl.disabled = false;
+                        buttonTextEl.textContent = 'AIで意味を補完';
+                    }
+                    if (registerBtn) {
+                        registerBtn.disabled = true;
+                        registerBtn.style.display = 'block';
+                    }
+                    if (startBtn) {
+                        startBtn.disabled = false;
+                        startBtn.textContent = 'デモスタート';
+                    }
                 }
             });
         }, { threshold: 0.3 });
@@ -824,9 +1322,9 @@
 
         // AI返信デモアニメーション
         const demoData = {
-            english: "Hey! How have you been? It's been a while since we last caught up!",
-            japanese: "元気だよ！最近は仕事が忙しくて、なかなか会えなかったね。",
-            result: "I've been doing great! I've been really busy with work lately, so we haven't been able to meet. Let's catch up soon over coffee!"
+            english: "How's your English learning going? Are you still practicing?",
+            japanese: "うん！最近は毎日英語を勉強しているよ。試験に向けて頑張ってる。",
+            result: "Yes! I've been studying English every day recently. I'm working hard for the exam. I need to study more vocabulary and grammar!"
         };
 
         let isAnimating = false;
@@ -853,6 +1351,14 @@
             const loadingEl = document.getElementById('demo-loading');
             const resultEl = document.getElementById('demo-result');
             const resultTextEl = document.getElementById('demo-result-text');
+            const usedWordsEl = document.getElementById('demo-used-words');
+            const categoryFriend = document.getElementById('demo-category-friend');
+            const friendIcon = categoryFriend.querySelector('svg');
+            const friendText = categoryFriend.querySelector('span');
+            const step1 = document.getElementById('demo-step-1');
+            const step2 = document.getElementById('demo-step-2');
+            const step3 = document.getElementById('demo-step-3');
+            const step4 = document.getElementById('demo-step-4');
 
             // リセット
             englishEl.textContent = '';
@@ -860,23 +1366,76 @@
             loadingEl.classList.add('hidden');
             resultEl.classList.add('hidden');
             resultTextEl.textContent = '';
+            usedWordsEl.classList.add('hidden');
             buttonEl.disabled = true;
             buttonTextEl.textContent = '入力中...';
+
+            // ステップバッジをリセット
+            step1.classList.add('hidden');
+            step2.classList.add('hidden');
+            step3.classList.add('hidden');
+            step4.classList.add('hidden');
+
+            // カテゴリーをリセット
+            categoryFriend.classList.remove('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+            categoryFriend.classList.add('border-gray-300', 'opacity-50');
+            if (friendIcon) {
+                friendIcon.classList.remove('text-black');
+                friendIcon.classList.add('text-gray-400');
+            }
+            if (friendText) {
+                friendText.classList.remove('text-black');
+                friendText.classList.add('text-gray-400');
+            }
+
+            // ステップ1を表示
+            step1.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             // 英文をタイピング
             await typeText(englishEl, demoData.english, 30);
             await new Promise(resolve => setTimeout(resolve, 500));
 
+            // ステップ1を非表示、ステップ2を表示
+            step1.classList.add('hidden');
+            step2.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 600));
+
+            // カテゴリー「友人」を選択
+            categoryFriend.classList.remove('border-gray-300', 'opacity-50');
+            categoryFriend.classList.add('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+            if (friendIcon) {
+                friendIcon.classList.remove('text-gray-400');
+                friendIcon.classList.add('text-black');
+            }
+            if (friendText) {
+                friendText.classList.remove('text-gray-400');
+                friendText.classList.add('text-black');
+            }
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // ステップ2を非表示、ステップ3を表示
+            step2.classList.add('hidden');
+            step3.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 600));
+
             // 日本語をタイピング
             await typeText(japaneseEl, demoData.japanese, 50);
             await new Promise(resolve => setTimeout(resolve, 800));
+
+            // ステップ3を非表示
+            step3.classList.add('hidden');
 
             // ボタンを有効化
             buttonEl.disabled = false;
             buttonTextEl.textContent = 'AI返信を生成';
 
-            // 自動クリック
+            // ステップ4を表示
             await new Promise(resolve => setTimeout(resolve, 500));
+            step4.classList.remove('hidden');
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // 自動クリック
             buttonEl.disabled = true;
             buttonTextEl.textContent = '生成中...';
 
@@ -884,40 +1443,102 @@
             loadingEl.classList.remove('hidden');
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // ローディング非表示
+            // ローディング非表示とステップ4を非表示
             loadingEl.classList.add('hidden');
+            step4.classList.add('hidden');
 
             // 結果を表示
             resultEl.classList.remove('hidden');
             await typeText(resultTextEl, demoData.result, 40);
+
+            // 返信文のタイピング完了後、少し待機してから使用単語を表示
+            await new Promise(resolve => setTimeout(resolve, 800));
+            usedWordsEl.classList.remove('hidden');
 
             // 完了
             buttonEl.disabled = false;
             buttonTextEl.textContent = 'もう一度見る';
             isAnimating = false;
 
-            // 5秒後に自動でリプレイ
-            autoReplayTimeout = setTimeout(() => {
-                runDemo();
-            }, 5000);
+            // デモスタートボタンを再度有効化
+            const startBtn = document.getElementById('reply-demo-start-btn');
+            startBtn.disabled = false;
+            startBtn.textContent = 'デモスタート';
         }
 
-        // ボタンクリックイベント
-        document.getElementById('demo-button').addEventListener('click', () => {
+        // AI返信デモスタートボタンクリックイベント
+        document.getElementById('reply-demo-start-btn').addEventListener('click', () => {
+            const startBtn = document.getElementById('reply-demo-start-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'アニメーション実行中...';
             clearTimeout(autoReplayTimeout);
             runDemo();
         });
 
-        // ページ読み込み時は自動開始しない（単語帳デモを優先）
-        // ビューポートに入ったときのみ開始
+        // ボタンクリックイベント
+        document.getElementById('demo-button').addEventListener('click', () => {
+            const startBtn = document.getElementById('reply-demo-start-btn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'アニメーション実行中...';
+            clearTimeout(autoReplayTimeout);
+            runDemo();
+        });
 
-        // Intersection Observerでビューポートに入ったら開始
-        const demoSection = document.querySelector('#demo-button').closest('section');
+        // Intersection Observerで画面外に出たら停止
+        const demoSection = document.querySelector('#demo-button')?.closest('section');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !isAnimating) {
+                if (!entry.isIntersecting) {
+                    // 画面外に出たらアニメーションを停止
                     clearTimeout(autoReplayTimeout);
-                    setTimeout(() => runDemo(), 500);
+                    isAnimating = false;
+
+                    // UI要素をリセット
+                    const englishEl = document.getElementById('demo-english');
+                    const japaneseEl = document.getElementById('demo-japanese');
+                    const buttonEl = document.getElementById('demo-button');
+                    const buttonTextEl = document.getElementById('demo-button-text');
+                    const loadingEl = document.getElementById('demo-loading');
+                    const resultEl = document.getElementById('demo-result');
+                    const usedWordsEl = document.getElementById('demo-used-words');
+                    const categoryFriend = document.getElementById('demo-category-friend');
+                    const step1 = document.getElementById('demo-step-1');
+                    const step2 = document.getElementById('demo-step-2');
+                    const step3 = document.getElementById('demo-step-3');
+                    const step4 = document.getElementById('demo-step-4');
+
+                    if (englishEl) englishEl.textContent = '';
+                    if (japaneseEl) japaneseEl.textContent = '';
+                    if (loadingEl) loadingEl.classList.add('hidden');
+                    if (resultEl) resultEl.classList.add('hidden');
+                    if (usedWordsEl) usedWordsEl.classList.add('hidden');
+                    if (step1) step1.classList.add('hidden');
+                    if (step2) step2.classList.add('hidden');
+                    if (step3) step3.classList.add('hidden');
+                    if (step4) step4.classList.add('hidden');
+                    if (categoryFriend) {
+                        categoryFriend.classList.remove('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+                        categoryFriend.classList.add('border-gray-300', 'opacity-50');
+                        const friendIcon = categoryFriend.querySelector('svg');
+                        const friendText = categoryFriend.querySelector('span');
+                        if (friendIcon) {
+                            friendIcon.classList.remove('text-black');
+                            friendIcon.classList.add('text-gray-400');
+                        }
+                        if (friendText) {
+                            friendText.classList.remove('text-black');
+                            friendText.classList.add('text-gray-400');
+                        }
+                    }
+                    if (buttonEl) {
+                        buttonEl.disabled = false;
+                        buttonTextEl.textContent = 'AI返信を生成';
+                    }
+                    const startBtn = document.getElementById('reply-demo-start-btn');
+                    if (startBtn) {
+                        startBtn.disabled = false;
+                        startBtn.textContent = 'デモスタート';
+                    }
                 }
             });
         }, { threshold: 0.3 });
@@ -925,6 +1546,166 @@
         if (demoSection) {
             observer.observe(demoSection);
         }
+
+        // 単語テストデモ
+        let testAnswered = false;
+
+        // 選択肢クリックイベント
+        document.querySelectorAll('.test-choice').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (testAnswered) return; // 既に回答済みの場合は無視
+                testAnswered = true;
+
+                const clickedButton = e.currentTarget;
+                const isCorrect = clickedButton.dataset.correct === 'true';
+                const resultDiv = document.getElementById('test-result');
+                const resultMessage = document.getElementById('test-result-message');
+
+                // 全ての選択肢を無効化
+                document.querySelectorAll('.test-choice').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('hover:bg-[#ffeb54]/10', 'hover:border-[#ffeb54]', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
+                });
+
+                if (isCorrect) {
+                    // 正解の場合
+                    clickedButton.classList.remove('border-black');
+                    clickedButton.classList.add('border-green-500', 'bg-green-50');
+                    clickedButton.querySelector('.choice-label').classList.remove('bg-gray-200');
+                    clickedButton.querySelector('.choice-label').classList.add('bg-green-500', 'text-white');
+
+                    resultMessage.classList.remove('border-red-500', 'bg-red-50');
+                    resultMessage.classList.add('border-green-500', 'bg-green-50');
+                    resultMessage.querySelector('p:first-child').textContent = '🎉 正解です！';
+                    resultMessage.querySelector('p:first-child').classList.add('text-green-700');
+                    resultMessage.querySelector('p:last-child').textContent = 'studyは「勉強する、研究する」という意味です';
+                    resultMessage.querySelector('p:last-child').classList.add('text-green-600');
+                } else {
+                    // 不正解の場合
+                    clickedButton.classList.remove('border-black');
+                    clickedButton.classList.add('border-red-500', 'bg-red-50');
+                    clickedButton.querySelector('.choice-label').classList.remove('bg-gray-200');
+                    clickedButton.querySelector('.choice-label').classList.add('bg-red-500', 'text-white');
+
+                    // 正解を緑色でハイライト
+                    document.querySelectorAll('.test-choice').forEach(btn => {
+                        if (btn.dataset.correct === 'true') {
+                            btn.classList.remove('border-black');
+                            btn.classList.add('border-green-500', 'bg-green-50');
+                            btn.querySelector('.choice-label').classList.remove('bg-gray-200');
+                            btn.querySelector('.choice-label').classList.add('bg-green-500', 'text-white');
+                        }
+                    });
+
+                    resultMessage.classList.remove('border-green-500', 'bg-green-50');
+                    resultMessage.classList.add('border-red-500', 'bg-red-50');
+                    resultMessage.querySelector('p:first-child').textContent = '❌ 残念...';
+                    resultMessage.querySelector('p:first-child').classList.add('text-red-700');
+                    resultMessage.querySelector('p:last-child').textContent = '正解は「勉強する、研究する」でした';
+                    resultMessage.querySelector('p:last-child').classList.add('text-red-600');
+                }
+
+                resultDiv.classList.remove('hidden');
+            });
+        });
+
+        // もう一度挑戦ボタン
+        document.getElementById('test-retry-btn').addEventListener('click', () => {
+            resetTestDemo();
+        });
+
+        function resetTestDemo() {
+            testAnswered = false;
+            const resultDiv = document.getElementById('test-result');
+            const resultMessage = document.getElementById('test-result-message');
+
+            resultDiv.classList.add('hidden');
+
+            // 全ての選択肢をリセット
+            document.querySelectorAll('.test-choice').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50');
+                btn.classList.add('border-black', 'hover:bg-[#ffeb54]/10', 'hover:border-[#ffeb54]', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
+
+                const label = btn.querySelector('.choice-label');
+                label.classList.remove('bg-red-500', 'bg-green-500', 'text-white');
+                label.classList.add('bg-gray-200');
+            });
+
+            // 結果メッセージのクラスをクリア
+            resultMessage.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50');
+            resultMessage.querySelector('p:first-child').classList.remove('text-red-700', 'text-green-700');
+            resultMessage.querySelector('p:last-child').classList.remove('text-red-600', 'text-green-600');
+        }
+
+        // ====================================
+        // Page Load Animation Controller
+        // ====================================
+        (function() {
+            // Split text into individual characters
+            function splitTextToChars(element) {
+                const text = element.textContent;
+                element.textContent = '';
+
+                text.split('').forEach((char, index) => {
+                    const span = document.createElement('span');
+                    span.className = 'loader-char';
+                    span.style.setProperty('--char-index', index);
+                    span.textContent = char;
+                    element.appendChild(span);
+                });
+            }
+
+            // Initialize character animations
+            const text1 = document.querySelector('.loader-text-1');
+            const text2 = document.querySelector('.loader-text-2');
+
+            if (text1) splitTextToChars(text1);
+            if (text2) splitTextToChars(text2);
+
+            const pageLoader = document.getElementById('page-loader');
+
+            // Hide loader after text animations complete
+            function hideLoader() {
+                // Add hidden class to trigger fade-out
+                pageLoader.classList.add('hidden');
+
+                // Remove from DOM after transition completes
+                setTimeout(() => {
+                    if (pageLoader && pageLoader.parentNode) {
+                        pageLoader.parentNode.removeChild(pageLoader);
+                    }
+                }, 800); // Match CSS transition duration
+            }
+
+            // Check if page is already loaded (e.g., back/forward navigation)
+            if (document.readyState === 'complete') {
+                // Immediate hide for cached pages
+                setTimeout(hideLoader, 300);
+            } else {
+                // Animation timeline:
+                // - Text 1 appears: 0s～0.3s (4 chars × 0.05s + fade)
+                // - Text 1 stays: 1.1s
+                // - Text 1 falls: 1.4s～2.0s (~0.6s staggered)
+                // - Text 2 appears: 2.2s～2.5s (4 chars × 0.05s + fade)
+                // - Text 2 stays: 1.1s
+                // - Text 2 falls: 3.6s～4.2s (~0.6s staggered)
+                // - Buffer: +0.3s
+                // Total: 4.5s
+                const animationDuration = 4500;
+                const startTime = Date.now();
+
+                window.addEventListener('load', function() {
+                    const elapsedTime = Date.now() - startTime;
+                    const remainingTime = Math.max(0, animationDuration - elapsedTime);
+
+                    setTimeout(hideLoader, remainingTime);
+                });
+            }
+
+            // Fallback: hide loader after max time even if load event doesn't fire
+            setTimeout(hideLoader, 5000);
+        })();
     </script>
 </body>
 </html>

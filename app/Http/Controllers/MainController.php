@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use App\Models\Product;
 use App\Models\Word;
 use App\Models\Japanese;
@@ -50,6 +51,18 @@ class MainController extends Controller
             'meaningArray' => 'required|array|min:1',
             'meaningArray.*' => 'nullable|string',
         ]);
+
+        // 既に同じ単語が登録されていないか確認（大文字・小文字は区別しない）
+        $inputWord = trim($request->word);
+        $duplicate = Word::where('user_id', auth()->id())
+            ->whereRaw('LOWER(word) = LOWER(?)', [$inputWord])
+            ->exists();
+
+        if ($duplicate) {
+            throw ValidationException::withMessages([
+                'word' => "「{$inputWord}」は既に登録されています",
+            ]);
+        }
 
         // フォームから送信された意味を配列として取得
         $meanings = $request->input('meaningArray');

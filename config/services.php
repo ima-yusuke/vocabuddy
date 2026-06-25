@@ -37,6 +37,10 @@ return [
 
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
+        // gemini-2.5-flash 無料枠のレート上限（単語調べ用）
+        // flash_rpd は本番429ログで20と確定。flash_rpm はGoogle非公開のため安全側の初期値。
+        'flash_rpm' => (int) env('GEMINI_FLASH_RPM', 10),
+        'flash_rpd' => (int) env('GEMINI_FLASH_RPD', 20),
     ],
 
 ];

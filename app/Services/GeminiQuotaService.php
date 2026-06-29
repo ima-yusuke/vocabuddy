@@ -6,12 +6,11 @@ use App\Models\AiUsageLog;
 use Illuminate\Support\Carbon;
 
 /**
- * Gemini無料枠（gemini-2.5-flash / autocomplete）の残量を ai_usage_logs から集計する。
- * クォータはAPIキー単位で全ユーザー共有のため user_id では絞らない。
+ * Gemini無料枠（単語調べ autocomplete）の残量を ai_usage_logs から集計する。
+ * クォータはAPIキー単位で全ユーザー・全モデル共有のため、modelやuser_idでは絞らずtypeのみで集計する。
  */
 class GeminiQuotaService
 {
-    private const MODEL = 'gemini-2.5-flash';
     private const TYPE = 'autocomplete';
 
     public function status(): array
@@ -55,8 +54,7 @@ class GeminiQuotaService
 
     private function baseQuery()
     {
-        return AiUsageLog::ofType(self::TYPE)
-            ->where('model_used', self::MODEL);
+        return AiUsageLog::ofType(self::TYPE);
     }
 
     /**
@@ -73,6 +71,6 @@ class GeminiQuotaService
         }
 
         $recoversAt = Carbon::parse($oldest)->addSeconds(60);
-        return max(0, $now->diffInSeconds($recoversAt, false));
+        return (int) max(0, round($now->diffInSeconds($recoversAt, false)));
     }
 }

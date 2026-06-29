@@ -58,8 +58,9 @@ class GeminiQuotaServiceTest extends TestCase
         $this->assertSame(17, $q['day']['remaining']);    // 20 - 3（全部今日）
     }
 
-    public function test_other_models_are_ignored(): void
+    public function test_other_types_ignored_but_all_autocomplete_models_counted(): void
     {
+        // 別タイプ（reply）はカウントされない
         AiUsageLog::create([
             'user_id' => $this->user->id,
             'type' => 'reply',
@@ -68,10 +69,19 @@ class GeminiQuotaServiceTest extends TestCase
             'created_at' => '2026-06-25 12:00:00',
         ]);
 
+        // Proユーザーのautocomplete（別モデル名）も同じキーのクォータを消費 → カウントする
+        AiUsageLog::create([
+            'user_id' => $this->user->id,
+            'type' => 'autocomplete',
+            'tokens_used' => null,
+            'model_used' => 'gemini-2.0-flash-exp',
+            'created_at' => '2026-06-25 12:00:00',
+        ]);
+
         $q = (new GeminiQuotaService())->status();
 
-        $this->assertSame(10, $q['minute']['remaining']); // flash以外は無視
-        $this->assertSame(20, $q['day']['remaining']);
+        $this->assertSame(9, $q['minute']['remaining']); // 10 - 1（autocomplete1件、replyは無視）
+        $this->assertSame(19, $q['day']['remaining']);    // 20 - 1
     }
 
     public function test_minute_recovery_seconds_when_exhausted(): void

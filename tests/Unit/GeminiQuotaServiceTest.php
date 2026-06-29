@@ -1,0 +1,101 @@
+<?php
+
+namespace Tests\Unit;
+
+use App\Models\AiUsageLog;
+use App\Models\User;
+use App\Services\GeminiQuotaService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Tests\TestCase;
+
+class GeminiQuotaServiceTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['services.gemini.flash_rpm' => 10]);
+        config(['services.gemini.flash_rpd' => 20]);
+        Carbon::setTestNow('2026-06-25 12:00:00');
+        $this->user = User::factory()->create();
+    }
+
+    private function logAt(string $time): void
+    {
+        AiUsageLog::create([
+            'user_id' => $this->user->id,
+            'type' => 'autocomplete',
+            'tokens_used' => null,
+            'model_used' => 'gemini-2.5-flash',
+            'created_at' => $time,
+        ]);
+    }
+
+    public function test_full_quota_when_no_usage(): void
+    {
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(10, $q['minute']['remaining']);
+        $this->assertSame(10, $q['minute']['limit']);
+        $this->assertSame(20, $q['day']['remaining']);
+        $this->assertSame(20, $q['day']['limit']);
+        $this->assertSame(0, $q['minute']['recovers_in_seconds']);
+    }
+
+    public function test_counts_only_last_minute_for_minute_window(): void
+    {
+        $this->logAt('2026-06-25 11:59:30'); // 30秒前 → カウント
+        $this->logAt('2026-06-25 11:58:30'); // 90秒前 → 対象外
+        $this->logAt('2026-06-25 12:00:00'); // 今 → カウント
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(8, $q['minute']['remaining']); // 10 - 2
+        $this->assertSame(17, $q['day']['remaining']);    // 20 - 3（全部今日）
+    }
+
+    public function test_other_models_are_ignored(): void
+    {
+        AiUsageLog::create([
+            'user_id' => $this->user->id,
+            'type' => 'reply',
+            'tokens_used' => null,
+            'model_used' => 'gemini-3-flash-preview',
+            'created_at' => '2026-06-25 12:00:00',
+        ]);
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(10, $q['minute']['remaining']); // flash以外は無視
+        $this->assertSame(20, $q['day']['remaining']);
+    }
+
+    public function test_minute_recovery_seconds_when_exhausted(): void
+    {
+        // 直近1分に10件（=上限）。最古は11:59:20
+        for ($i = 0; $i < 10; $i++) {
+            $this->logAt('2026-06-25 11:59:20');
+        }
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(0, $q['minute']['remaining']);
+        // 最古11:59:20 + 60s = 12:00:20。今が12:00:00 → 20秒後
+        $this->assertSame(20, $q['minute']['recovers_in_seconds']);
+    }
+
+    public function test_remaining_never_negative(): void
+    {
+        for ($i = 0; $i < 25; $i++) {
+            $this->logAt('2026-06-25 09:00:00'); // 今日だが1分窓外
+        }
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(0, $q['day']['remaining']); // 20 - 25 をクランプ
+    }
+}

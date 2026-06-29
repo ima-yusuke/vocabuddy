@@ -60,6 +60,10 @@
                                 AI で意味を補完
                             </button>
 
+                            <div id="ai_quota" class="text-xs text-black/60 mt-2 text-center" style="display:none;">
+                                <span id="ai_quota_text"></span>
+                            </div>
+
                             <div id="loading_message" style="display: none;"
                                 class="bg-[#ffeb54]/10 border-2 border-black rounded-xl p-6 text-center">
                                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
@@ -274,6 +278,32 @@
 <script>
     const ADD_MEANING_BTN = document.getElementById('add_meaning');
     const AUTOCOMPLETE_BTN = document.getElementById('autocomplete_btn');
+    const AI_QUOTA = document.getElementById('ai_quota');
+    const AI_QUOTA_TEXT = document.getElementById('ai_quota_text');
+
+    async function refreshAiQuota() {
+        try {
+            const res = await fetch('/word/ai-quota', {
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            });
+            if (!res.ok) return;
+            const json = await res.json();
+            const q = json.data;
+
+            let text = `今日: 残り ${q.day.remaining}/${q.day.limit} 回 ・ 直近1分: 残り ${q.minute.remaining}/${q.minute.limit} 回`;
+            if (q.day.remaining === 0) {
+                text = '本日の上限に達しました（翌日0時に回復）';
+            } else if (q.minute.remaining === 0) {
+                text = `混み合っています。あと ${q.minute.recovers_in_seconds} 秒で回復します`;
+            }
+            AI_QUOTA_TEXT.textContent = text;
+            AI_QUOTA.style.display = 'block';
+        } catch (e) {
+            // 残量表示は補助情報なので失敗しても無視
+        }
+    }
+
+    refreshAiQuota();
     const LOADING_MESSAGE = document.getElementById('loading_message');
     const LOADING_TEXT = document.getElementById('loading_text');
     const PREVIEW_AREA = document.getElementById('preview_area');
@@ -405,6 +435,7 @@
         } finally {
             LOADING_MESSAGE.style.display = 'none';
             AUTOCOMPLETE_BTN.disabled = false;
+            refreshAiQuota();
         }
     });
 

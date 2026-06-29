@@ -27,7 +27,7 @@ class GeminiQuotaService
             ->count();
 
         $dayCount = $this->baseQuery()
-            ->whereDate('created_at', $now->toDateString())
+            ->today()
             ->count();
 
         $minuteRemaining = max(0, $rpm - $minuteCount);
@@ -55,7 +55,7 @@ class GeminiQuotaService
 
     private function baseQuery()
     {
-        return AiUsageLog::where('type', self::TYPE)
+        return AiUsageLog::ofType(self::TYPE)
             ->where('model_used', self::MODEL);
     }
 

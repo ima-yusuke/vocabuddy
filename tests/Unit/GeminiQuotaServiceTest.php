@@ -98,4 +98,41 @@ class GeminiQuotaServiceTest extends TestCase
 
         $this->assertSame(0, $q['day']['remaining']); // 20 - 25 をクランプ
     }
+
+    public function test_minute_recovery_zero_at_exact_60s_boundary(): void
+    {
+        // 上限ちょうど。最古が60秒前ぴったり = 11:59:00 → 回復まで0秒
+        for ($i = 0; $i < 10; $i++) {
+            $this->logAt('2026-06-25 11:59:00');
+        }
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(0, $q['minute']['remaining']);
+        $this->assertSame(0, $q['minute']['recovers_in_seconds']);
+    }
+
+    public function test_day_recovers_at_is_next_midnight_when_exhausted(): void
+    {
+        for ($i = 0; $i < 20; $i++) {
+            $this->logAt('2026-06-25 10:00:00');
+        }
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertSame(0, $q['day']['remaining']);
+        $this->assertSame(
+            \Illuminate\Support\Carbon::parse('2026-06-26 00:00:00')->toIso8601String(),
+            $q['day']['recovers_at']
+        );
+    }
+
+    public function test_day_recovers_at_is_null_when_quota_remains(): void
+    {
+        $this->logAt('2026-06-25 10:00:00');
+
+        $q = (new GeminiQuotaService())->status();
+
+        $this->assertNull($q['day']['recovers_at']);
+    }
 }

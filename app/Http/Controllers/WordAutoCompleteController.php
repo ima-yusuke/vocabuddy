@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\AiUsageLog;
+use App\Services\GeminiQuotaService;
 
 class WordAutoCompleteController extends Controller
 {
@@ -79,6 +80,19 @@ class WordAutoCompleteController extends Controller
                 'error_type' => $errorType
             ], 500);
         }
+    }
+
+    /**
+     * Gemini無料枠（単語調べ）の残量を返す
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function quota(GeminiQuotaService $quota)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $quota->status(),
+        ]);
     }
 
     /**

@@ -49,6 +49,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/word/autocomplete', [WordAutoCompleteController::class, 'autocomplete'])
         ->middleware('check.ai.usage:autocomplete')
         ->name('AutocompleteWord');
+
+    Route::get('/word/ai-quota', [WordAutoCompleteController::class, 'quota'])
+        ->name('word.ai-quota');
 });
 
 // ダッシュボード（認証必須）

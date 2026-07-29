@@ -277,4 +277,33 @@ class NoteTest extends TestCase
         $response->assertOk();
         $response->assertSee('編集対象メモ');
     }
+
+    public function test_note_can_be_deleted_with_its_images(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/notes', [
+            'title' => '削除対象メモ',
+            'images' => [UploadedFile::fake()->image('a.png')],
+        ]);
+        $note = Note::first();
+        $imagePath = $note->images->first()->path;
+
+        $response = $this->actingAs($user)->delete('/notes/' . $note->id);
+
+        $response->assertRedirect(route('notes.index'));
+        $this->assertNull(Note::find($note->id));
+        Storage::disk('public')->assertMissing($imagePath);
+    }
+
+    public function test_others_note_cannot_be_deleted(): void
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $other->id]);
+
+        $this->actingAs($user)->delete('/notes/' . $note->id)->assertNotFound();
+        $this->assertNotNull(Note::find($note->id));
+    }
 }

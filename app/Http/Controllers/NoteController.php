@@ -99,6 +99,19 @@ class NoteController extends Controller
         return redirect()->route('notes.show', $note->id)->with('success', 'メモを更新しました');
     }
 
+    public function destroy(string $id)
+    {
+        $note = auth()->user()->notes()->with('images')->findOrFail($id);
+
+        foreach ($note->images as $image) {
+            Storage::disk('public')->delete($image->path);
+        }
+
+        $note->delete();
+
+        return redirect()->route('notes.index')->with('success', 'メモを削除しました');
+    }
+
     /**
      * 作成・更新共通のバリデーション
      */

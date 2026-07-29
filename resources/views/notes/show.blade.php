@@ -23,10 +23,21 @@
                                 <span class="text-gray-400 text-sm">{{ $note->updated_at->format('Y/m/d') }} 更新</span>
                             </div>
                         </div>
-                        <a href="{{ route('notes.edit', $note->id) }}"
-                            class="shrink-0 bg-black text-[#ffeb54] px-5 py-2 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-200">
-                            編集
-                        </a>
+                        <div class="shrink-0 flex items-center gap-2">
+                            <a href="{{ route('notes.edit', $note->id) }}"
+                                class="bg-black text-[#ffeb54] px-5 py-2 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-200">
+                                編集
+                            </a>
+                            <form method="post" action="{{ route('notes.destroy', $note->id) }}"
+                                onsubmit="return confirm('このメモを削除しますか？画像も一緒に削除されます。');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="bg-white text-black border-2 border-black px-5 py-2 rounded-xl font-semibold hover:bg-black hover:text-[#ffeb54] transition-all duration-200">
+                                    削除
+                                </button>
+                            </form>
+                        </div>
                     </div>
 
                     @if($note->body)

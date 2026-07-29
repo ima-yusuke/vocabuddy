@@ -1269,7 +1269,7 @@ git commit -m "feat: 学習ノートの編集機能を追加（画像の個別�
 - Modify: `resources/views/notes/show.blade.php`（削除ボタン追加）
 - Test: `tests/Feature/NoteTest.php`（テスト追加）
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `tests/Feature/NoteTest.php` に追加:
 
@@ -1304,12 +1304,12 @@ git commit -m "feat: 学習ノートの編集機能を追加（画像の個別�
     }
 ```
 
-- [ ] **Step 2: テストが失敗することを確認する**
+- [x] **Step 2: テストが失敗することを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: 追加2件が FAIL（destroy メソッドが存在しない）
 
-- [ ] **Step 3: destroy メソッドを実装する**
+- [x] **Step 3: destroy メソッドを実装する**
 
 `app/Http/Controllers/NoteController.php` に追加:
 
@@ -1328,7 +1328,7 @@ Expected: 追加2件が FAIL（destroy メソッドが存在しない）
     }
 ```
 
-- [ ] **Step 4: 詳細画面に削除ボタンを追加する**
+- [x] **Step 4: 詳細画面に削除ボタンを追加する**
 
 `resources/views/notes/show.blade.php` の編集ボタン（`<a href="{{ route('notes.edit', ...`）の直後に追加。既存の `<a>` を `<div class="shrink-0 flex items-center gap-2">` で包んで並べる:
 
@@ -1350,12 +1350,12 @@ Expected: 追加2件が FAIL（destroy メソッドが存在しない）
                         </div>
 ```
 
-- [ ] **Step 5: テストが通ることを確認する**
+- [x] **Step 5: テストが通ることを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: PASS（20 tests）
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add app/Http/Controllers/NoteController.php resources/views/notes/show.blade.php tests/Feature/NoteTest.php

@@ -13,6 +13,9 @@
                     <a href="{{ route('ShowTest') }}" class="text-sm font-medium {{ request()->routeIs('ShowTest') || request()->routeIs('StartTest') || request()->routeIs('ShowQuestion') ? 'text-black' : 'text-gray-700 hover:text-black' }} transition">
                         単語テスト
                     </a>
+                    <a href="{{ route('notes.index') }}" class="text-sm font-medium {{ request()->routeIs('notes.*') ? 'text-black' : 'text-gray-700 hover:text-black' }} transition">
+                        学習ノート
+                    </a>
                     <a href="{{ route('ShowReplyAssistant') }}" class="text-sm font-medium {{ request()->routeIs('ShowReplyAssistant') ? 'text-black' : 'text-gray-700 hover:text-black' }} transition">
                         AI返信
                     </a>

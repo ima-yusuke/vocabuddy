@@ -10,7 +10,7 @@
                     </div>
                 @endif
 
-                <article class="bg-white border-2 border-black rounded-2xl p-10">
+                <article class="bg-white border-2 border-black rounded-2xl p-4 sm:p-10">
                     <div class="flex items-start justify-between mb-6">
                         <div>
                             <h1 class="text-3xl font-bold text-black mb-2">{{ $note->title }}</h1>
@@ -45,10 +45,11 @@
                     @endif
 
                     @if($note->images->isNotEmpty())
-                        <div class="space-y-6">
+                        {{-- スマホではカード余白を打ち消して画像を最大幅で表示 --}}
+                        <div class="space-y-6 -mx-4 sm:mx-0">
                             @foreach($note->images as $image)
                                 <img src="{{ asset('storage/' . $image->path) }}" alt=""
-                                    class="w-full border-2 border-black rounded-2xl">
+                                    class="w-full border-y-2 border-black sm:border-2 sm:rounded-2xl">
                             @endforeach
                         </div>
                     @endif

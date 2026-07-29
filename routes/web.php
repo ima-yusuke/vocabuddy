@@ -8,6 +8,7 @@ use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\WordAutoCompleteController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\NoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/word/ai-quota', [WordAutoCompleteController::class, 'quota'])
         ->name('word.ai-quota');
+
+    // 学習ノート
+    Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
+    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/notes/{id}', [NoteController::class, 'show'])->name('notes.show');
+    Route::get('/notes/{id}/edit', [NoteController::class, 'edit'])->name('notes.edit');
+    Route::patch('/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
 });
 
 // ダッシュボード（認証必須）

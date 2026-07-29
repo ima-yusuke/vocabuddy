@@ -110,6 +110,22 @@ class User extends Authenticatable
     }
 
     /**
+     * このユーザーの学習ノート
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
+     * このユーザーのノートカテゴリ
+     */
+    public function noteCategories()
+    {
+        return $this->hasMany(NoteCategory::class);
+    }
+
+    /**
      * プランに応じたAIモデル名を取得
      *
      * @param string $defaultModel コントローラーで使用中のデフォルトモデル

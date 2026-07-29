@@ -1067,7 +1067,7 @@ git commit -m "feat: 学習ノートの詳細画面を追加"
 - Create: `resources/views/notes/edit.blade.php`
 - Test: `tests/Feature/NoteTest.php`（テスト追加）
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `tests/Feature/NoteTest.php` に追加:
 
@@ -1170,12 +1170,12 @@ git commit -m "feat: 学習ノートの詳細画面を追加"
     }
 ```
 
-- [ ] **Step 2: テストが失敗することを確認する**
+- [x] **Step 2: テストが失敗することを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: 追加6件が FAIL（edit / update メソッドが存在しない）
 
-- [ ] **Step 3: edit / update メソッドを実装する**
+- [x] **Step 3: edit / update メソッドを実装する**
 
 `app/Http/Controllers/NoteController.php` に追加:
 
@@ -1220,7 +1220,7 @@ Expected: 追加6件が FAIL（edit / update メソッドが存在しない）
     }
 ```
 
-- [ ] **Step 4: 編集ビューを作成する**
+- [x] **Step 4: 編集ビューを作成する**
 
 `resources/views/notes/edit.blade.php`:
 
@@ -1248,12 +1248,12 @@ Expected: 追加6件が FAIL（edit / update メソッドが存在しない）
 </x-template>
 ```
 
-- [ ] **Step 5: テストが通ることを確認する**
+- [x] **Step 5: テストが通ることを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: PASS（18 tests）
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add app/Http/Controllers/NoteController.php resources/views/notes/edit.blade.php tests/Feature/NoteTest.php

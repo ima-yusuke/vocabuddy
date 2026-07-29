@@ -180,4 +180,101 @@ class NoteTest extends TestCase
 
         $this->actingAs($user)->get('/notes/' . $note->id)->assertNotFound();
     }
+
+    public function test_note_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $user->id, 'title' => '旧タイトル']);
+
+        $response = $this->actingAs($user)->patch('/notes/' . $note->id, [
+            'title' => '新タイトル',
+            'body' => '更新後の本文',
+            'new_category' => '文法',
+        ]);
+
+        $response->assertRedirect(route('notes.show', $note->id));
+        $note->refresh();
+        $this->assertSame('新タイトル', $note->title);
+        $this->assertSame('文法', $note->category->name);
+    }
+
+    public function test_others_note_cannot_be_updated(): void
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $other->id, 'title' => '他人のメモ']);
+
+        $this->actingAs($user)
+            ->patch('/notes/' . $note->id, ['title' => '乗っ取り'])
+            ->assertNotFound();
+
+        $this->assertSame('他人のメモ', $note->fresh()->title);
+    }
+
+    public function test_existing_image_can_be_deleted_on_update(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/notes', [
+            'title' => '画像つきメモ',
+            'images' => [UploadedFile::fake()->image('a.png')],
+        ]);
+        $note = Note::first();
+        $image = $note->images->first();
+
+        $this->actingAs($user)->patch('/notes/' . $note->id, [
+            'title' => '画像つきメモ',
+            'delete_image_ids' => [$image->id],
+        ]);
+
+        $this->assertCount(0, $note->fresh()->images);
+        Storage::disk('public')->assertMissing($image->path);
+    }
+
+    public function test_image_can_be_added_on_update(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user)->patch('/notes/' . $note->id, [
+            'title' => $note->title,
+            'images' => [UploadedFile::fake()->image('added.png')],
+        ]);
+
+        $this->assertCount(1, $note->fresh()->images);
+    }
+
+    public function test_total_images_cannot_exceed_ten_on_update(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $user->id]);
+        for ($i = 0; $i < 9; $i++) {
+            $note->images()->create(['path' => "note-images/{$user->id}/img{$i}.png"]);
+        }
+
+        $response = $this->actingAs($user)->patch('/notes/' . $note->id, [
+            'title' => $note->title,
+            'images' => [
+                UploadedFile::fake()->image('x.png'),
+                UploadedFile::fake()->image('y.png'),
+            ],
+        ]);
+
+        $response->assertSessionHasErrors('images');
+        $this->assertCount(9, $note->fresh()->images);
+    }
+
+    public function test_edit_form_is_displayed(): void
+    {
+        $user = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $user->id, 'title' => '編集対象メモ']);
+
+        $response = $this->actingAs($user)->get('/notes/' . $note->id . '/edit');
+
+        $response->assertOk();
+        $response->assertSee('編集対象メモ');
+    }
 }

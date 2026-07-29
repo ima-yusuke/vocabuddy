@@ -60,6 +60,45 @@ class NoteController extends Controller
         return view('notes.show', compact('note'));
     }
 
+    public function edit(string $id)
+    {
+        $note = auth()->user()->notes()->with('images')->findOrFail($id);
+        $categories = NoteCategory::where('user_id', auth()->id())->orderBy('name')->get();
+        return view('notes.edit', compact('note', 'categories'));
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $note = auth()->user()->notes()->with('images')->findOrFail($id);
+        $validated = $this->validateNote($request);
+
+        // 画像の合計枚数チェック（既存 - 削除 + 新規 <= 10）
+        $deleteIds = collect($request->input('delete_image_ids', []))->map(fn ($v) => (int) $v);
+        $newCount = count($request->file('images', []));
+        $totalAfter = $note->images->whereNotIn('id', $deleteIds)->count() + $newCount;
+        if ($totalAfter > self::MAX_IMAGES) {
+            throw ValidationException::withMessages([
+                'images' => '画像は1メモにつき最大' . self::MAX_IMAGES . '枚までです',
+            ]);
+        }
+
+        $note->update([
+            'note_category_id' => $this->resolveCategoryId($request),
+            'title' => $validated['title'],
+            'body' => $validated['body'] ?? null,
+        ]);
+
+        // チェックされた既存画像を削除（storage上のファイルも消す）
+        foreach ($note->images->whereIn('id', $deleteIds) as $image) {
+            Storage::disk('public')->delete($image->path);
+            $image->delete();
+        }
+
+        $this->storeImages($request, $note);
+
+        return redirect()->route('notes.show', $note->id)->with('success', 'メモを更新しました');
+    }
+
     /**
      * 作成・更新共通のバリデーション
      */

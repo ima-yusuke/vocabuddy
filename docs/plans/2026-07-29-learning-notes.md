@@ -596,7 +596,7 @@ git commit -m "feat: 学習ノートの一覧画面とルーティングを追�
 - Create: `resources/views/notes/create.blade.php`
 - Test: `tests/Feature/NoteTest.php`（テスト追加）
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `tests/Feature/NoteTest.php` のクラス内にテストを追加。ファイル先頭の use 群に以下を追加:
 
@@ -714,12 +714,12 @@ use Illuminate\Support\Facades\Storage;
 
 注意: `UploadedFile::fake()->image()` は PHP の GD 拡張が必要。テスト実行時に GD 未導入エラーが出た場合は `php -m | grep gd` で確認し、導入してから進める。
 
-- [ ] **Step 2: テストが失敗することを確認する**
+- [x] **Step 2: テストが失敗することを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: 追加分が FAIL（NoteController::create / store が存在しない）
 
-- [ ] **Step 3: NoteController に create / store とヘルパーを実装する**
+- [x] **Step 3: NoteController に create / store とヘルパーを実装する**
 
 `app/Http/Controllers/NoteController.php` を以下のように拡張（use 群に追加が必要）:
 
@@ -817,7 +817,7 @@ use Illuminate\Validation\ValidationException;
     }
 ```
 
-- [ ] **Step 4: 共通フォームと作成ビューを作成する**
+- [x] **Step 4: 共通フォームと作成ビューを作成する**
 
 `resources/views/notes/_form.blade.php`（`$note` は編集時のみ渡される。`$categories` は必須）:
 
@@ -918,14 +918,14 @@ use Illuminate\Validation\ValidationException;
 </x-template>
 ```
 
-- [ ] **Step 5: テストが通ることを確認する**
+- [x] **Step 5: テストが通ることを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: PASS（Task 2 の3件 + 追加7件 = 10 tests）
 
 ※ この時点で store のリダイレクト先 `notes.show` のルートは定義済み（Task 2）だが show メソッドは未実装。`assertRedirect` はリダイレクト先を実際には呼ばないため問題ない。
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add app/Http/Controllers/NoteController.php resources/views/notes tests/Feature/NoteTest.php

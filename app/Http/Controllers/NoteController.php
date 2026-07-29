@@ -54,6 +54,12 @@ class NoteController extends Controller
         return redirect()->route('notes.show', $note->id)->with('success', 'メモを作成しました');
     }
 
+    public function show(string $id)
+    {
+        $note = auth()->user()->notes()->with(['category', 'images'])->findOrFail($id);
+        return view('notes.show', compact('note'));
+    }
+
     /**
      * 作成・更新共通のバリデーション
      */

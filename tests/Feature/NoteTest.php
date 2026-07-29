@@ -153,4 +153,31 @@ class NoteTest extends TestCase
 
         $response->assertSessionHasErrors('images');
     }
+
+    public function test_note_detail_is_displayed(): void
+    {
+        $user = User::factory()->create();
+        $note = Note::factory()->create([
+            'user_id' => $user->id,
+            'title' => '現在分詞とは？',
+            'body' => '動詞のing形。',
+        ]);
+        $note->images()->create(['path' => 'note-images/' . $user->id . '/sample.png']);
+
+        $response = $this->actingAs($user)->get('/notes/' . $note->id);
+
+        $response->assertOk();
+        $response->assertSee('現在分詞とは？');
+        $response->assertSee('動詞のing形。');
+        $response->assertSee('note-images/' . $user->id . '/sample.png');
+    }
+
+    public function test_others_note_returns_404(): void
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $note = Note::factory()->create(['user_id' => $other->id]);
+
+        $this->actingAs($user)->get('/notes/' . $note->id)->assertNotFound();
+    }
 }

@@ -1370,7 +1370,7 @@ git commit -m "feat: 学習ノートの削除機能を追加"
 - Modify: `resources/views/components/side-menu.blade.php`（学習ノートのリンク追加）
 - Test: 既存の全テスト
 
-- [ ] **Step 1: サイドメニューにリンクを追加する**
+- [x] **Step 1: サイドメニューにリンクを追加する**
 
 `resources/views/components/side-menu.blade.php` の認証済みユーザー向けセクション内、「単語テスト」の `</li>` の直後に追加（既存リンクと同じスタイル）:
 
@@ -1385,17 +1385,17 @@ git commit -m "feat: 学習ノートの削除機能を追加"
                     </li>
 ```
 
-- [ ] **Step 2: 全テストを実行してリグレッションがないことを確認する**
+- [x] **Step 2: 全テストを実行してリグレッションがないことを確認する**
 
 Run: `php artisan test`
 Expected: 全テスト PASS（既存テスト含む）
 
-- [ ] **Step 3: storage リンクを確認する**
+- [x] **Step 3: storage リンクを確認する**
 
 Run: `php artisan storage:link`
 Expected: すでにリンク済みなら「The [public/storage] link already exists」、なければ作成される。どちらでもOK。
 
-- [ ] **Step 4: 手動確認**
+- [x] **Step 4: 手動確認**
 
 開発サーバーで以下を確認する（`docker-compose.yml` がある環境なら `docker compose up -d` 済み前提。起動方法が不明なら README.md を参照）:
 
@@ -1406,7 +1406,7 @@ Expected: すでにリンク済みなら「The [public/storage] link already exi
 5. 編集で画像を削除・追加できる
 6. 削除で一覧に戻り、メモが消えている
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add resources/views/components/side-menu.blade.php

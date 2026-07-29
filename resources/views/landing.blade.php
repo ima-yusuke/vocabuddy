@@ -7,7 +7,7 @@
     <title>VocaBuddy - AI搭載の英語学習アプリ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Gochi+Hand&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/side-menu.css', 'resources/js/side-menu.js', 'resources/js/app.js'])
     <style>
         :root {
@@ -44,102 +44,125 @@
             color: var(--color-primary);
         }
 
-        /* Page Load Animation System */
-        .page-loader {
-            position: fixed;
-            inset: 0;
-            background-color: var(--color-primary);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
-            overflow: hidden;
+        /* ==============================
+           Hero: 動くもやしヒーロー
+           ============================== */
+        .hero-logo {
+            text-align: center;
+            padding-top: 2.5rem;
         }
 
-        .page-loader.hidden {
+        .hero-logo span {
+            display: inline-block;
+            font-weight: 900;
+            font-size: clamp(2.6rem, 9vw, 6rem);
+            letter-spacing: 0.02em;
+            color: var(--color-black);
+            animation: hero-pop-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+                       hero-sway 2.6s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.07s), calc(1s + var(--i) * 0.12s);
+        }
+
+        @keyframes hero-pop-in {
+            0% { opacity: 0; transform: scale(0.2) rotate(-14deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        @keyframes hero-sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .hero-stage {
+            position: relative;
+            height: clamp(230px, 34vw, 380px);
+            max-width: 80rem;
+            margin: 0.5rem auto 0;
+        }
+
+        .mo {
+            position: absolute;
+            bottom: 0;
+            cursor: pointer;
+        }
+
+        .mo img {
+            width: 100%;
+            display: block;
+            mix-blend-mode: multiply;
+            transform: rotate(var(--r));
+            animation: mo-boil 0.5s steps(2, jump-none) infinite;
+        }
+
+        .mo img.flip {
+            transform: scaleX(-1) rotate(var(--r));
+            animation: mo-boil-f 0.5s steps(2, jump-none) infinite;
+        }
+
+        @keyframes mo-boil {
+            0% { transform: rotate(var(--r)); }
+            100% { transform: rotate(calc(var(--r) + 3deg)); }
+        }
+
+        @keyframes mo-boil-f {
+            0% { transform: scaleX(-1) rotate(var(--r)); }
+            100% { transform: scaleX(-1) rotate(calc(var(--r) + 3deg)); }
+        }
+
+        .mo:hover img:not(.flip), .mo.play img:not(.flip) {
+            animation: mo-hop 0.45s ease-in-out infinite;
+        }
+
+        .mo:hover img.flip, .mo.play img.flip {
+            animation: mo-hop-f 0.45s ease-in-out infinite;
+        }
+
+        @keyframes mo-hop {
+            0%, 100% { transform: rotate(var(--r)) translateY(0); }
+            40% { transform: rotate(calc(var(--r) * -1)) translateY(-26px) scale(1.06); }
+        }
+
+        @keyframes mo-hop-f {
+            0%, 100% { transform: scaleX(-1) rotate(var(--r)) translateY(0); }
+            40% { transform: scaleX(-1) rotate(calc(var(--r) * -1)) translateY(-26px) scale(1.06); }
+        }
+
+        .mo .say {
+            position: absolute;
+            left: 50%;
+            width: var(--sayw);
+            margin-left: calc(var(--sayw) / -2);
+            top: calc(var(--sayw) * -0.55);
             opacity: 0;
-            visibility: hidden;
+            transform: scale(0.4);
+            transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
         }
 
-        .loader-text-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .mo .say svg {
             width: 100%;
-            height: 100%;
+            height: auto;
         }
 
-        .loader-text {
-            position: absolute;
-            font-size: 5rem;
-            font-weight: 900;
-            color: var(--color-black);
-            white-space: nowrap;
-            line-height: 1.2;
+        .mo:hover .say, .mo.play .say {
+            opacity: 1;
+            transform: scale(1) rotate(-3deg);
         }
 
-        @media (min-width: 640px) {
-            .loader-text {
-                font-size: 6.5rem;
-            }
-        }
+        /* スマホ: 5体 → 3体に減らして1体を大きく */
+        .mo-sm { display: none; }
 
         @media (min-width: 768px) {
-            .loader-text {
-                font-size: 8rem;
-            }
+            .mo-sm { display: block; }
         }
 
-        @media (min-width: 1024px) {
-            .loader-text {
-                font-size: 10rem;
-            }
-        }
-
-        /* Character wrapper for individual animation */
-        .loader-char {
-            display: inline-block;
-            opacity: 0;
-        }
-
-        /* First text: characters appear one by one (fast), then fall down one by one */
-        .loader-text-1 .loader-char {
-            animation: charFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards,
-                       charFallDown 0.4s cubic-bezier(0.6, 0, 0.4, 1) forwards;
-            animation-delay: calc(var(--char-index) * 0.05s),
-                           calc(1.4s + var(--char-index) * 0.06s);
-        }
-
-        /* Second text: characters appear one by one (fast), then fall down one by one */
-        .loader-text-2 .loader-char {
-            animation: charFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards,
-                       charFallDown 0.4s cubic-bezier(0.6, 0, 0.4, 1) forwards;
-            animation-delay: calc(2.2s + var(--char-index) * 0.05s),
-                           calc(3.6s + var(--char-index) * 0.06s);
-        }
-
-        @keyframes charFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(0);
-            }
-            100% {
+        @media (prefers-reduced-motion: reduce) {
+            .hero-logo span,
+            .mo img,
+            .mo:hover img,
+            .mo.play img {
+                animation: none !important;
                 opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes charFallDown {
-            0% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(30px);
             }
         }
 
@@ -206,14 +229,6 @@
 
         /* Respect reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
-            .page-loader {
-                transition: opacity 0.2s linear, visibility 0.2s;
-            }
-            .loader-char {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
             .animate-fade-in,
             .animate-slide-up,
             .animate-scale-in {
@@ -256,41 +271,74 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- Page Loader -->
-    <div id="page-loader" class="page-loader">
-        <div class="loader-text-container">
-            <div class="loader-text loader-text-1">英語学習</div>
-            <div class="loader-text loader-text-2">変えよう</div>
-        </div>
-    </div>
-
     <x-side-menu></x-side-menu>
     <x-navigation></x-navigation>
 
+    <!-- 手描き風吹き出し用のSVGフィルタ -->
+    <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+        <defs>
+            <filter id="hero-wobble" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
     <!-- ヒーローセクション -->
-    <section class="pt-32 pb-20 md:pt-40 md:pb-32 bg-yellow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-4xl mx-auto text-center">
-                <div class="inline-block mb-6 px-4 py-2 bg-black text-white rounded-full animate-scale-in delay-100">
-                    <span class="text-sm font-medium">✨ 20単語まで完全無料</span>
+    <section class="bg-white overflow-hidden pb-10">
+        <h1 class="hero-logo" aria-label="VocaBuddy">
+            <span style="--i:0">V</span><span style="--i:1">o</span><span style="--i:2">c</span><span style="--i:3">a</span><span style="--i:4">B</span><span style="--i:5">u</span><span style="--i:6">d</span><span style="--i:7">d</span><span style="--i:8">y</span>
+        </h1>
+
+        <div class="hero-stage">
+            <div class="mo" style="left:4%; width:clamp(120px, 16vw, 220px); --r:-8deg; --sayw:clamp(120px, 15vw, 160px);">
+                <div class="say">
+                    <svg viewBox="0 0 200 128">
+                        <g filter="url(#hero-wobble)"><path d="M24,50 C20,28 50,12 98,12 C154,12 184,24 182,50 C180,72 150,84 112,85 L134,114 L100,85 C60,84 28,66 24,50 Z" fill="#fff" stroke="#1A1A1A" stroke-width="2.6" stroke-linejoin="round"/></g>
+                        <text font-family="'Gochi Hand', cursive" font-size="38" fill="#1A1A1A" stroke="#fff" stroke-width="1.1"><tspan x="40" y="62" rotate="-10">w</tspan><tspan x="66" y="56" rotate="6">H</tspan><tspan x="92" y="60" rotate="-4">A</tspan><tspan x="116" y="54" rotate="8">T</tspan><tspan x="136" y="58" rotate="-6">!</tspan><tspan x="148" y="54" rotate="10">?</tspan></text>
+                    </svg>
                 </div>
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up delay-200">
-                    映画や日常で<br>
-                    出会った英単語を、<br>
-                    自分だけの単語帳に
-                </h1>
-                <p class="text-xl md:text-2xl mb-10 leading-relaxed animate-fade-in delay-400">
-                    AIが自動補完。返信文も生成。<br>
-                    クレジットカード不要で今すぐ始められる
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-500">
-                    <a href="{{ route('register') }}" class="btn-primary px-10 py-4 rounded-full text-lg font-medium">
-                        無料で始める
-                    </a>
-                    <a href="#features" class="bg-black text-white px-10 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition">
-                        詳しく見る
-                    </a>
+                <img src="{{ asset('images/moyashi.jpg') }}" alt="もやしキャラクター">
+            </div>
+
+            <div class="mo mo-sm" style="left:26%; width:clamp(70px, 11vw, 150px); --r:6deg; bottom:14px; --sayw:clamp(90px, 11vw, 120px);">
+                <div class="say">
+                    <svg viewBox="0 0 200 120">
+                        <g filter="url(#hero-wobble)"><path d="M24,50 C20,28 50,12 98,12 C154,12 184,24 182,50 C180,72 150,84 112,85 L134,110 L100,85 C60,84 28,66 24,50 Z" fill="#fff" stroke="#1A1A1A" stroke-width="2.8" stroke-linejoin="round"/></g>
+                        <text font-family="'Gochi Hand', cursive" font-size="30" fill="#1A1A1A" stroke="#fff" stroke-width="1"><tspan x="60" y="60" rotate="-8">h</tspan><tspan x="82" y="55" rotate="5">i</tspan><tspan x="96" y="60" rotate="-4">!</tspan></text>
+                    </svg>
                 </div>
+                <img src="{{ asset('images/moyashi.jpg') }}" alt="">
+            </div>
+
+            <div class="mo" style="left:42%; width:clamp(140px, 18vw, 250px); --r:3deg; --sayw:clamp(130px, 16vw, 170px);">
+                <div class="say">
+                    <svg viewBox="0 0 210 128">
+                        <g filter="url(#hero-wobble)"><path d="M24,50 C20,28 50,12 100,12 C160,12 194,24 192,50 C190,72 156,84 116,85 L138,114 L104,85 C62,84 28,66 24,50 Z" fill="#fff" stroke="#1A1A1A" stroke-width="2.6" stroke-linejoin="round"/></g>
+                        <text font-family="'Gochi Hand', cursive" font-size="30" fill="#1A1A1A" stroke="#fff" stroke-width="1"><tspan x="38" y="60" rotate="-8">s</tspan><tspan x="56" y="55" rotate="4">t</tspan><tspan x="72" y="60" rotate="-5">u</tspan><tspan x="92" y="54" rotate="7">d</tspan><tspan x="112" y="59" rotate="-4">y</tspan><tspan x="130" y="55" rotate="8">?</tspan></text>
+                    </svg>
+                </div>
+                <img src="{{ asset('images/moyashi.jpg') }}" alt="" class="flip">
+            </div>
+
+            <div class="mo mo-sm" style="left:64%; width:clamp(60px, 10vw, 130px); --r:-12deg; bottom:26px; --sayw:clamp(85px, 10vw, 110px);">
+                <div class="say">
+                    <svg viewBox="0 0 200 120">
+                        <g filter="url(#hero-wobble)"><path d="M24,50 C20,28 50,12 98,12 C154,12 184,24 182,50 C180,72 150,84 112,85 L134,110 L100,85 C60,84 28,66 24,50 Z" fill="#fff" stroke="#1A1A1A" stroke-width="2.8" stroke-linejoin="round"/></g>
+                        <text font-family="'Gochi Hand', cursive" font-size="28" fill="#1A1A1A" stroke="#fff" stroke-width="1"><tspan x="42" y="58" rotate="-8">w</tspan><tspan x="66" y="54" rotate="5">o</tspan><tspan x="84" y="58" rotate="-4">w</tspan><tspan x="110" y="53" rotate="7">!</tspan></text>
+                    </svg>
+                </div>
+                <img src="{{ asset('images/moyashi.jpg') }}" alt="">
+            </div>
+
+            <div class="mo" style="left:76%; width:clamp(100px, 14vw, 190px); --r:10deg; --sayw:clamp(95px, 12vw, 130px);">
+                <div class="say">
+                    <svg viewBox="0 0 200 120">
+                        <g filter="url(#hero-wobble)"><path d="M24,50 C20,28 50,12 98,12 C154,12 184,24 182,50 C180,72 150,84 112,85 L134,110 L100,85 C60,84 28,66 24,50 Z" fill="#fff" stroke="#1A1A1A" stroke-width="2.8" stroke-linejoin="round"/></g>
+                        <text font-family="'Gochi Hand', cursive" font-size="28" fill="#1A1A1A" stroke="#fff" stroke-width="1"><tspan x="36" y="58" rotate="-6">e</tspan><tspan x="54" y="54" rotate="5">a</tspan><tspan x="72" y="58" rotate="-4">s</tspan><tspan x="88" y="53" rotate="6">y</tspan><tspan x="104" y="58" rotate="-5">!</tspan></text>
+                    </svg>
+                </div>
+                <img src="{{ asset('images/moyashi.jpg') }}" alt="" class="flip">
             </div>
         </div>
     </section>
@@ -1639,73 +1687,15 @@
         }
 
         // ====================================
-        // Page Load Animation Controller
+        // ヒーロー: タッチ端末では タップで跳ねる+吹き出し
         // ====================================
-        (function() {
-            // Split text into individual characters
-            function splitTextToChars(element) {
-                const text = element.textContent;
-                element.textContent = '';
-
-                text.split('').forEach((char, index) => {
-                    const span = document.createElement('span');
-                    span.className = 'loader-char';
-                    span.style.setProperty('--char-index', index);
-                    span.textContent = char;
-                    element.appendChild(span);
-                });
-            }
-
-            // Initialize character animations
-            const text1 = document.querySelector('.loader-text-1');
-            const text2 = document.querySelector('.loader-text-2');
-
-            if (text1) splitTextToChars(text1);
-            if (text2) splitTextToChars(text2);
-
-            const pageLoader = document.getElementById('page-loader');
-
-            // Hide loader after text animations complete
-            function hideLoader() {
-                // Add hidden class to trigger fade-out
-                pageLoader.classList.add('hidden');
-
-                // Remove from DOM after transition completes
-                setTimeout(() => {
-                    if (pageLoader && pageLoader.parentNode) {
-                        pageLoader.parentNode.removeChild(pageLoader);
-                    }
-                }, 800); // Match CSS transition duration
-            }
-
-            // Check if page is already loaded (e.g., back/forward navigation)
-            if (document.readyState === 'complete') {
-                // Immediate hide for cached pages
-                setTimeout(hideLoader, 300);
-            } else {
-                // Animation timeline:
-                // - Text 1 appears: 0s～0.3s (4 chars × 0.05s + fade)
-                // - Text 1 stays: 1.1s
-                // - Text 1 falls: 1.4s～2.0s (~0.6s staggered)
-                // - Text 2 appears: 2.2s～2.5s (4 chars × 0.05s + fade)
-                // - Text 2 stays: 1.1s
-                // - Text 2 falls: 3.6s～4.2s (~0.6s staggered)
-                // - Buffer: +0.3s
-                // Total: 4.5s
-                const animationDuration = 4500;
-                const startTime = Date.now();
-
-                window.addEventListener('load', function() {
-                    const elapsedTime = Date.now() - startTime;
-                    const remainingTime = Math.max(0, animationDuration - elapsedTime);
-
-                    setTimeout(hideLoader, remainingTime);
-                });
-            }
-
-            // Fallback: hide loader after max time even if load event doesn't fire
-            setTimeout(hideLoader, 5000);
-        })();
+        document.querySelectorAll('.mo').forEach(mo => {
+            mo.addEventListener('touchstart', () => {
+                mo.classList.add('play');
+                clearTimeout(mo._playTimer);
+                mo._playTimer = setTimeout(() => mo.classList.remove('play'), 1400);
+            }, { passive: true });
+        });
     </script>
 </body>
 </html>

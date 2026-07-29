@@ -31,7 +31,7 @@
 - Modify: `app/Models/User.php`（relations 追加）
 - Test: `tests/Feature/NoteModelTest.php`
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `tests/Feature/NoteModelTest.php`:
 
@@ -84,12 +84,12 @@ class NoteModelTest extends TestCase
 }
 ```
 
-- [ ] **Step 2: テストが失敗することを確認する**
+- [x] **Step 2: テストが失敗することを確認する**
 
 Run: `php artisan test --filter=NoteModelTest`
 Expected: FAIL（`note_categories` テーブルが存在しない / クラスが存在しない）
 
-- [ ] **Step 3: マイグレーション3本を作成する**
+- [x] **Step 3: マイグレーション3本を作成する**
 
 `database/migrations/2026_07_29_000001_create_note_categories_table.php`:
 
@@ -180,7 +180,7 @@ return new class extends Migration
 };
 ```
 
-- [ ] **Step 4: モデル3つを作成する**
+- [x] **Step 4: モデル3つを作成する**
 
 `app/Models/Note.php`:
 
@@ -279,7 +279,7 @@ class NoteImage extends Model
 }
 ```
 
-- [ ] **Step 5: ファクトリ2つを作成する**
+- [x] **Step 5: ファクトリ2つを作成する**
 
 `database/factories/NoteFactory.php`:
 
@@ -333,7 +333,7 @@ class NoteCategoryFactory extends Factory
 }
 ```
 
-- [ ] **Step 6: User モデルに relations を追加する**
+- [x] **Step 6: User モデルに relations を追加する**
 
 `app/Models/User.php` の `weakWords()` メソッドの直後に追加:
 
@@ -357,17 +357,17 @@ class NoteCategoryFactory extends Factory
 
 ファイル先頭の `use` 群に `use App\Models\Note;` `use App\Models\NoteCategory;` は不要（同一 namespace）。
 
-- [ ] **Step 7: テストが通ることを確認する**
+- [x] **Step 7: テストが通ることを確認する**
 
 Run: `php artisan test --filter=NoteModelTest`
 Expected: PASS（2 tests）
 
-- [ ] **Step 8: 開発DBにマイグレーションを適用する**
+- [x] **Step 8: 開発DBにマイグレーションを適用する**
 
 Run: `php artisan migrate`
 Expected: 3本のマイグレーションが `DONE`
 
-- [ ] **Step 9: コミット**
+- [x] **Step 9: コミット**
 
 ```bash
 git add database/migrations app/Models database/factories tests/Feature/NoteModelTest.php
@@ -384,7 +384,7 @@ git commit -m "feat: 学習ノートのテーブル・モデル・ファクト�
 - Modify: `routes/web.php`（auth グループ内にルート追加）
 - Test: `tests/Feature/NoteTest.php`
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `tests/Feature/NoteTest.php`:
 
@@ -442,12 +442,12 @@ class NoteTest extends TestCase
 }
 ```
 
-- [ ] **Step 2: テストが失敗することを確認する**
+- [x] **Step 2: テストが失敗することを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: FAIL（GET /notes が 404）
 
-- [ ] **Step 3: ルートを追加する**
+- [x] **Step 3: ルートを追加する**
 
 `routes/web.php` の auth グループ内（`Route::get('/word/ai-quota', ...)` の直後）に追加し、ファイル先頭の use 群に `use App\Http\Controllers\NoteController;` を追加:
 
@@ -464,7 +464,7 @@ Expected: FAIL（GET /notes が 404）
 
 注意: `/notes/create` は `/notes/{id}` より**前**に定義すること（後だと create が {id} に食われる）。
 
-- [ ] **Step 4: NoteController を作成する（この時点では index のみ）**
+- [x] **Step 4: NoteController を作成する（この時点では index のみ）**
 
 `app/Http/Controllers/NoteController.php`:
 
@@ -500,7 +500,7 @@ class NoteController extends Controller
 }
 ```
 
-- [ ] **Step 5: 一覧ビューを作成する**
+- [x] **Step 5: 一覧ビューを作成する**
 
 `resources/views/notes/index.blade.php`:
 
@@ -574,12 +574,12 @@ class NoteController extends Controller
 </x-template>
 ```
 
-- [ ] **Step 6: テストが通ることを確認する**
+- [x] **Step 6: テストが通ることを確認する**
 
 Run: `php artisan test --filter=NoteTest`
 Expected: PASS（3 tests）
 
-- [ ] **Step 7: コミット**
+- [x] **Step 7: コミット**
 
 ```bash
 git add routes/web.php app/Http/Controllers/NoteController.php resources/views/notes tests/Feature/NoteTest.php

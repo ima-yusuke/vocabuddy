@@ -28,20 +28,12 @@
             font-weight: 700;
         }
 
-        .bg-yellow {
-            background-color: var(--color-primary);
-        }
-
         .bg-black {
             background-color: var(--color-black);
         }
 
         .bg-white {
             background-color: var(--color-white);
-        }
-
-        .text-yellow {
-            color: var(--color-primary);
         }
 
         /* ==============================
@@ -64,6 +56,39 @@
 
         .hero-logo-gap {
             margin-left: clamp(0.5rem, 1.5vw, 1.25rem);
+        }
+
+        /* ==============================
+           ヒーローに合わせた白黒手書きテイスト共通
+           ============================== */
+        .hand-label {
+            font-family: 'Gochi Hand', cursive;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            display: inline-block;
+            transform: rotate(-3deg);
+        }
+
+        .sketch-card {
+            border: 2px solid #1A1A1A;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 5px 5px 0 #1A1A1A;
+        }
+
+        .btn-ink {
+            display: inline-block;
+            background: #1A1A1A;
+            color: #fff;
+            font-weight: bold;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-ink:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25);
         }
 
         .hero-logo span {
@@ -263,14 +288,14 @@
         }
 
         .btn-primary {
-            background-color: var(--color-primary);
-            color: var(--color-black);
+            background-color: var(--color-black);
+            color: var(--color-white);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 235, 84, 0.4);
+            box-shadow: 4px 6px 0 rgba(0, 0, 0, 0.25);
         }
 
         .btn-white {
@@ -359,106 +384,80 @@
         </div>
     </section>
 
-    <!-- 問題提起セクション -->
-    <section class="py-20 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">
-                    英語学習、<br class="md:hidden">こんな悩みありませんか？
-                </h2>
+    <!-- ② 特典バー -->
+    <section class="py-12 bg-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="sketch-card p-8 md:p-10 text-center" style="transform: rotate(-0.5deg);">
+                <span class="hand-label">free!</span>
+                <h2 class="text-2xl md:text-3xl font-bold mt-2 mb-3">いまなら無料プランで全機能試せます</h2>
+                <p class="text-gray-600 mb-6">クレジットカード不要・30秒で登録（仮テキスト）</p>
+                <a href="{{ route('register') }}" class="btn-ink text-lg">無料で始める →</a>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                <div class="text-center p-8">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gray-100 flex items-center justify-center text-4xl">
-                        😰
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">単語帳が続かない</h3>
-                    <p class="text-gray-600 leading-relaxed">市販の単語帳は自分に関係ない単語ばかりで飽きてしまう</p>
-                </div>
-                <div class="text-center p-8">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gray-100 flex items-center justify-center text-4xl">
-                        ⏰
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">調べるのに時間がかかる</h3>
-                    <p class="text-gray-600 leading-relaxed">辞書で意味を調べて、ノートに書いて...手間がかかりすぎる</p>
-                </div>
-                <div class="text-center p-8">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gray-100 flex items-center justify-center text-4xl">
-                        📝
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">覚えても使えない</h3>
-                    <p class="text-gray-600 leading-relaxed">単語を覚えても、実際の会話で使う機会がない</p>
-                </div>
-            </div>
+        </div>
+    </section>
 
-            <!-- 解決策 -->
-            <div class="bg-black rounded-3xl p-12 md:p-16 text-center">
-                <div class="max-w-4xl mx-auto text-white">
-                    <div class="text-6xl mb-8">✨</div>
-                    <h3 class="text-3xl md:text-4xl font-bold mb-8">VocaBuddyなら、すべて解決</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                        <div class="bg-yellow text-black rounded-2xl p-6">
-                            <div class="text-2xl font-bold mb-3">📚</div>
-                            <div class="text-lg font-bold mb-2">自分専用の単語帳</div>
-                            <p class="text-sm">映画や日常で出会った単語だけを登録。興味のある単語だから続く</p>
-                        </div>
-                        <div class="bg-yellow text-black rounded-2xl p-6">
-                            <div class="text-2xl font-bold mb-3">⚡</div>
-                            <div class="text-lg font-bold mb-2">AI自動補完</div>
-                            <p class="text-sm">単語を入力するだけで発音・意味を自動取得。10秒で登録完了</p>
-                        </div>
-                        <div class="bg-yellow text-black rounded-2xl p-6">
-                            <div class="text-2xl font-bold mb-3">💬</div>
-                            <div class="text-lg font-bold mb-2">実践的に使える</div>
-                            <p class="text-sm">返信アシスタントで登録した単語を使った英文を自動生成</p>
-                        </div>
-                    </div>
+    <!-- ③ 読者の課題（共感） -->
+    <section class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-3"><span class="hand-label">hmm...?</span></div>
+            <h2 class="text-3xl md:text-5xl font-bold text-center mb-8">こんな経験、ありませんか？</h2>
+            <p class="text-center text-lg md:text-xl leading-relaxed mb-14 text-gray-800">
+                映画を観ていて「この単語いいな」と思った。<br>
+                …3日後、思い出せない。<b>あの単語には、もう二度と出会えないかもしれない。</b>（仮テキスト）
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="sketch-card p-8 text-center" style="transform: rotate(-1deg);">
+                    <img src="{{ asset('images/moyashi.jpg') }}" alt="" class="w-16 mx-auto mb-4" style="mix-blend-mode: multiply; transform: rotate(-10deg);">
+                    <span class="hand-label" style="font-size:1.3rem;">ugh...</span>
+                    <h3 class="text-xl font-bold mb-3 mt-1">調べるのが面倒</h3>
+                    <p class="text-gray-600 leading-relaxed">辞書で調べてノートに書いて…が面倒で、結局そのまま（仮）</p>
+                </div>
+                <div class="sketch-card p-8 text-center" style="transform: rotate(0.8deg);">
+                    <img src="{{ asset('images/moyashi.jpg') }}" alt="" class="w-16 mx-auto mb-4" style="mix-blend-mode: multiply; transform: rotate(8deg);">
+                    <span class="hand-label" style="font-size:1.3rem;">zzz...</span>
+                    <h3 class="text-xl font-bold mb-3 mt-1">単語帳が続かない</h3>
+                    <p class="text-gray-600 leading-relaxed">市販の単語帳は自分に関係ない単語ばかりで3日坊主（仮）</p>
+                </div>
+                <div class="sketch-card p-8 text-center" style="transform: rotate(-0.5deg);">
+                    <img src="{{ asset('images/moyashi.jpg') }}" alt="" class="w-16 mx-auto mb-4" style="mix-blend-mode: multiply; transform: scaleX(-1) rotate(-6deg);">
+                    <span class="hand-label" style="font-size:1.3rem;">oops!</span>
+                    <h3 class="text-xl font-bold mb-3 mt-1">いざという時 出てこない</h3>
+                    <p class="text-gray-600 leading-relaxed">覚えたはずなのに、外国人の友達への返信でパッと出てこない（仮）</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 主要機能セクション -->
-    <section id="features" class="py-20 bg-yellow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    4つの主要機能
-                </h2>
-                <p class="text-xl">すべて無料プランから使える</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- 機能1 -->
-                <div class="feature-card bg-white p-10 rounded-3xl border-2 border-black">
-                    <div class="w-16 h-16 rounded-2xl bg-yellow flex items-center justify-center text-3xl mb-6">
-                        📚
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">自分だけの単語帳</h3>
-                    <p class="text-gray-700 leading-relaxed text-lg">映画や日常で学んだ英単語を登録して、自分専用の単語帳を作成。市販の単語帳とは違い、あなたが本当に使いたい単語だけを集められます。</p>
+    <!-- ④ 使うとどうなるか（未来） -->
+    <section id="features" class="py-20 bg-white border-t border-black/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-3"><span class="hand-label">your future!</span></div>
+            <h2 class="text-3xl md:text-5xl font-bold text-center mb-4">VocaBuddyのある毎日</h2>
+            <p class="text-center text-lg text-gray-600 mb-14">使い始めたあなたはこうなります（仮テキスト）</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="feature-card sketch-card p-10" style="transform: rotate(-0.6deg);">
+                    <span class="hand-label">10 sec!</span>
+                    <div class="inline-block bg-black text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">AI自動補完</div>
+                    <h3 class="text-2xl font-bold mt-4 mb-3">映画の途中でも、出会った単語が10秒であなたの単語帳に</h3>
+                    <p class="text-gray-600 leading-relaxed">「あとで調べよう」が人生から消えます（仮）</p>
                 </div>
-                <!-- 機能2 -->
-                <div class="feature-card bg-white p-10 rounded-3xl border-2 border-black">
-                    <div class="w-16 h-16 rounded-2xl bg-yellow flex items-center justify-center text-3xl mb-6">
-                        🤖
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">AI自動補完</h3>
-                    <p class="text-gray-700 leading-relaxed text-lg">英単語を入力するだけで、AIが発音・品詞・意味を自動取得。辞書を引く時間が90%削減され、10秒で登録完了します。</p>
+                <div class="feature-card sketch-card p-10" style="transform: rotate(0.6deg);">
+                    <span class="hand-label">quiz!</span>
+                    <div class="inline-block bg-black text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">単語テスト</div>
+                    <h3 class="text-2xl font-bold mt-4 mb-3">通勤中の4択テストで、気づけば覚えている</h3>
+                    <p class="text-gray-600 leading-relaxed">机に向かう「勉強」はもう不要（仮）</p>
                 </div>
-                <!-- 機能3 -->
-                <div class="feature-card bg-white p-10 rounded-3xl border-2 border-black">
-                    <div class="w-16 h-16 rounded-2xl bg-yellow flex items-center justify-center text-3xl mb-6">
-                        ✏️
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">単語テスト</h3>
-                    <p class="text-gray-700 leading-relaxed text-lg">登録した単語から4択クイズを自動生成。ゲーム感覚で楽しく学習でき、自分の理解度を確認できます。</p>
+                <div class="feature-card sketch-card p-10" style="transform: rotate(0.4deg);">
+                    <span class="hand-label">reply!</span>
+                    <div class="inline-block bg-black text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">AI返信アシスタント</div>
+                    <h3 class="text-2xl font-bold mt-4 mb-3">外国人の友達への返信で、覚えた単語がスッと出てくる</h3>
+                    <p class="text-gray-600 leading-relaxed">単語が「知識」から「会話できる英語」に変わる瞬間（仮）</p>
                 </div>
-                <!-- 機能4 -->
-                <div class="feature-card bg-white p-10 rounded-3xl border-2 border-black">
-                    <div class="w-16 h-16 rounded-2xl bg-yellow flex items-center justify-center text-3xl mb-6">
-                        💬
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">AI返信アシスタント</h3>
-                    <p class="text-gray-700 leading-relaxed text-lg">登録した単語を使った自然な英語の返信文をAIが生成。覚えた単語を実際の会話で使える形で練習できます。</p>
+                <div class="feature-card sketch-card p-10" style="transform: rotate(-0.4deg);">
+                    <span class="hand-label">notes!</span>
+                    <div class="inline-block bg-black text-white text-xs font-bold px-3 py-1 rounded-full ml-3 align-middle">学習ノート</div>
+                    <h3 class="text-2xl font-bold mt-4 mb-3">学んだ文法や気づきが、ノートに貯まっていく</h3>
+                    <p class="text-gray-600 leading-relaxed">1年後、あなただけの英語資産になります（仮）</p>
                 </div>
             </div>
         </div>
@@ -468,13 +467,14 @@
     <section class="py-20 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
+                <div class="mb-3"><span class="hand-label">proof!</span></div>
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    単語登録はたった10秒
+                    本当に10秒？ 見てください
                 </h2>
-                <p class="text-xl text-gray-600">AI自動補完で辞書を引く手間を削減</p>
+                <p class="text-xl text-gray-600">AI自動補完で辞書を引く手間を削減（仮テキスト）</p>
             </div>
 
-            <div id="word-demo-container" class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+            <div id="word-demo-container" class="sketch-card rounded-3xl p-8 md:p-12">
                 <div class="text-center mb-6">
                     <button id="word-demo-start-btn" class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
                         デモスタート
@@ -492,16 +492,16 @@
                     <!-- AI補完ボタン -->
                     <div class="text-center">
                         <button id="word-demo-button"
-                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                             <span id="word-demo-button-text">AIで意味を補完</span>
                         </button>
                     </div>
 
                     <!-- ローディング -->
                     <div id="word-demo-loading" class="hidden">
-                        <div class="bg-[#ffeb54]/20 border-2 border-black rounded-xl p-6 text-center">
+                        <div class="bg-white border-2 border-black rounded-xl p-6 text-center">
                             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
-                                <div class="w-8 h-8 border-4 border-[#ffeb54] border-t-black rounded-full animate-spin"></div>
+                                <div class="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
                             </div>
                             <p class="text-black font-semibold">AI が単語情報を取得中...</p>
                         </div>
@@ -509,9 +509,9 @@
 
                     <!-- 結果表示 -->
                     <div id="word-demo-result" class="hidden space-y-4">
-                        <div class="bg-[#ffeb54]/10 border-2 border-[#ffeb54] rounded-xl p-6">
+                        <div class="bg-gray-50 border-2 border-black rounded-xl p-6">
                             <h4 class="text-lg font-bold text-black mb-4 flex items-center">
-                                <svg class="w-6 h-6 mr-2 text-[#ffeb54]" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-6 h-6 mr-2 text-black" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
                                 AI補完結果
@@ -561,46 +561,22 @@
         </div>
     </section>
 
-    <!-- CTA: 単語登録 -->
-    <section class="relative py-24 md:py-32 bg-[#ffeb54] overflow-hidden">
-        <!-- Decorative geometric elements -->
-        <div class="absolute top-0 right-0 w-64 h-64 border-4 border-black/5 rounded-full -mr-32 -mt-32"></div>
-        <div class="absolute bottom-0 left-0 w-48 h-48 border-4 border-black/5 rotate-45 -ml-24 -mb-24"></div>
-
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div class="inline-block mb-4">
-                <p class="text-sm font-bold tracking-[0.3em] uppercase text-black/60">Experience Fast</p>
-            </div>
-            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-black mb-6 leading-tight">
-                10秒で単語登録を<br class="hidden md:block">体験しよう
-            </h2>
-            <p class="text-lg md:text-xl text-black/70 mb-12 max-w-2xl mx-auto">
-                辞書を引く時間が90%削減。AIが自動で補完するから、<br class="hidden md:block">
-                英単語学習がこれまでにないスピード感に
-            </p>
-            <a href="{{ route('register') }}"
-                class="group inline-block bg-black hover:bg-black/90 text-white px-12 py-6 rounded-full text-lg md:text-xl font-bold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-[0_8px_0_0_rgba(0,0,0,0.2)] hover:shadow-[0_12px_0_0_rgba(0,0,0,0.2)] active:translate-y-1 active:shadow-[0_4px_0_0_rgba(0,0,0,0.2)]">
-                無料で始める
-                <span class="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-        </div>
-    </section>
-
     <!-- 単語テストデモセクション -->
     <section class="py-20 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
+                <div class="mb-3"><span class="hand-label">try it!</span></div>
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">
                     単語テストで定着を確認
                 </h2>
-                <p class="text-xl text-gray-600">4択クイズで楽しく学習</p>
+                <p class="text-xl text-gray-600">4択クイズで楽しく学習（仮テキスト）</p>
             </div>
 
-            <div class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+            <div class="sketch-card rounded-3xl p-8 md:p-12">
                 <div class="bg-white border-2 border-black rounded-2xl p-8 md:p-10">
                     <div class="text-center mb-8">
                         <div class="flex items-center justify-center mb-6">
-                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#ffeb54]">
+                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-black">
                                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
@@ -614,13 +590,13 @@
                     <div class="my-12 text-center">
                         <div class="inline-block">
                             <p class="text-4xl md:text-5xl font-bold text-black tracking-wide">study</p>
-                            <div class="h-1 bg-[#ffeb54] mt-4 rounded-full"></div>
+                            <div class="h-1 bg-black mt-4 rounded-full"></div>
                         </div>
                     </div>
 
-                    <div class="mb-10 bg-[#ffeb54]/10 rounded-xl p-6 border border-black">
+                    <div class="mb-10 bg-gray-100 rounded-xl p-6 border border-black">
                         <div class="flex items-center mb-3">
-                            <svg class="w-5 h-5 mr-2 text-[#ffeb54]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-2 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                             </svg>
                             <span class="text-sm font-semibold text-black">例文</span>
@@ -629,36 +605,36 @@
                     </div>
 
                     <div id="test-choices" class="space-y-4">
-                        <button data-answer="A" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                        <button data-answer="A" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-gray-100 border-2 border-black hover:border-black rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
                             <div class="flex items-center">
-                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-gray-300 text-black font-semibold mr-4 transition-colors flex-shrink-0">
                                     A
                                 </span>
                                 <span class="text-black font-medium">旅行する、旅する</span>
                             </div>
                         </button>
 
-                        <button data-answer="B" data-correct="true" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                        <button data-answer="B" data-correct="true" class="test-choice group w-full text-left bg-white hover:bg-gray-100 border-2 border-black hover:border-black rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
                             <div class="flex items-center">
-                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-gray-300 text-black font-semibold mr-4 transition-colors flex-shrink-0">
                                     B
                                 </span>
                                 <span class="text-black font-medium">勉強する、研究する</span>
                             </div>
                         </button>
 
-                        <button data-answer="C" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                        <button data-answer="C" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-gray-100 border-2 border-black hover:border-black rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
                             <div class="flex items-center">
-                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-gray-300 text-black font-semibold mr-4 transition-colors flex-shrink-0">
                                     C
                                 </span>
                                 <span class="text-black font-medium">働く、仕事をする</span>
                             </div>
                         </button>
 
-                        <button data-answer="D" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-[#ffeb54]/10 border-2 border-black hover:border-[#ffeb54] rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
+                        <button data-answer="D" data-correct="false" class="test-choice group w-full text-left bg-white hover:bg-gray-100 border-2 border-black hover:border-black rounded-xl p-5 transition-all duration-300 shadow-soft hover:shadow-soft-lg transform hover:-translate-y-0.5">
                             <div class="flex items-center">
-                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-[#ffeb54]/30 text-black font-semibold mr-4 transition-colors flex-shrink-0">
+                                <span class="choice-label inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-200 group-hover:bg-gray-300 text-black font-semibold mr-4 transition-colors flex-shrink-0">
                                     D
                                 </span>
                                 <span class="text-black font-medium">教える、指導する</span>
@@ -681,98 +657,18 @@
         </div>
     </section>
 
-    <!-- CTA: 単語テスト -->
-    <section class="relative py-24 md:py-32 bg-white overflow-hidden">
-        <!-- Decorative line pattern -->
-        <div class="absolute inset-0 opacity-[0.02]">
-            <div class="absolute top-0 left-1/4 w-px h-full bg-black"></div>
-            <div class="absolute top-0 left-2/4 w-px h-full bg-black"></div>
-            <div class="absolute top-0 left-3/4 w-px h-full bg-black"></div>
-        </div>
-
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <!-- Left: Text content -->
-                <div class="text-center md:text-left">
-                    <div class="inline-block mb-4">
-                        <p class="text-sm font-bold tracking-[0.3em] uppercase text-black/40">Make It Stick</p>
-                    </div>
-                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-black mb-6 leading-tight">
-                        クイズで楽しく<br>
-                        単語を定着させよう
-                    </h2>
-                    <p class="text-lg md:text-xl text-black/60 mb-8">
-                        ゲーム感覚で記憶に定着。<br>
-                        自分の単語帳から自動生成される4択クイズ
-                    </p>
-                </div>
-
-                <!-- Right: CTA -->
-                <div class="flex flex-col items-center md:items-end">
-                    <div class="relative">
-                        <!-- Yellow accent box -->
-                        <div class="absolute -inset-6 bg-[#ffeb54] rounded-3xl transform rotate-3"></div>
-                        <div class="relative bg-black rounded-3xl p-10 md:p-12 text-center transform -rotate-1 hover:rotate-0 transition-transform duration-300">
-                            <div class="text-[#ffeb54] text-5xl md:text-6xl font-black mb-4">Quiz</div>
-                            <a href="{{ route('register') }}"
-                                class="inline-block bg-[#ffeb54] hover:bg-[#ffeb54]/90 text-black px-10 py-5 rounded-full text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg">
-                                無料で始める →
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 価値提案セクション -->
-    <section class="py-20 bg-yellow">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <div class="inline-block bg-black text-white px-6 py-2 rounded-full text-sm font-bold mb-6">
-                    ここが違う！
-                </div>
-                <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
-                    登録するだけじゃない。<br>
-                    <span class="text-5xl md:text-7xl">学んだ単語を<br class="md:hidden">リアルで使える！</span>
-                </h2>
-                <p class="text-xl md:text-2xl text-gray-800 leading-relaxed mb-8 max-w-3xl mx-auto">
-                    VocaBuddyは、あなたが登録した単語を使った返信文をAIが自動生成。<br class="hidden md:block">
-                    単語を「覚える」だけでなく「実際に使う」練習ができます。
-                </p>
-                <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-12">
-                    <div class="flex items-center bg-white rounded-2xl border-2 border-black px-8 py-6 shadow-lg">
-                        <div class="text-5xl mr-4">📚</div>
-                        <div class="text-left">
-                            <p class="text-sm text-gray-600 font-semibold">STEP 1</p>
-                            <p class="text-xl font-bold">単語を登録</p>
-                        </div>
-                    </div>
-                    <div class="text-4xl font-bold hidden md:block">→</div>
-                    <div class="text-4xl font-bold md:hidden">↓</div>
-                    <div class="flex items-center bg-white rounded-2xl border-2 border-black px-8 py-6 shadow-lg">
-                        <div class="text-5xl mr-4">💬</div>
-                        <div class="text-left">
-                            <p class="text-sm text-gray-600 font-semibold">STEP 2</p>
-                            <p class="text-xl font-bold">AIが返信文を生成</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- AI返信デモセクション -->
     <section class="py-20 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
+                <div class="mb-3"><span class="hand-label">see this!</span></div>
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">
                     AI返信アシスタント体験
                 </h2>
-                <p class="text-xl text-gray-600">実際の動作を見てみましょう</p>
+                <p class="text-xl text-gray-600">実際の動作を見てみましょう（仮テキスト）</p>
             </div>
 
-            <div id="reply-demo-container" class="bg-yellow/20 border-2 border-black rounded-3xl p-8 md:p-12">
+            <div id="reply-demo-container" class="sketch-card rounded-3xl p-8 md:p-12">
                 <div class="text-center mb-6">
                     <button id="reply-demo-start-btn" class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
                         デモスタート
@@ -782,7 +678,7 @@
                     <!-- 英文入力 -->
                     <div class="relative">
                         <div id="demo-step-1" class="hidden mb-3">
-                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                            <span class="inline-block bg-white border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
                                 ステップ1：相手からの英文を入力
                             </span>
                         </div>
@@ -795,7 +691,7 @@
                     <!-- カテゴリー選択 -->
                     <div class="relative">
                         <div id="demo-step-2" class="hidden mb-3">
-                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                            <span class="inline-block bg-white border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
                                 ステップ2：カテゴリを選択
                             </span>
                         </div>
@@ -839,7 +735,7 @@
                     <!-- 日本語入力 -->
                     <div class="relative">
                         <div id="demo-step-3" class="hidden mb-3">
-                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                            <span class="inline-block bg-white border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
                                 ステップ3：返信したい内容を日本語で入力
                             </span>
                         </div>
@@ -852,21 +748,21 @@
                     <!-- AI生成ボタン -->
                     <div class="relative text-center">
                         <div id="demo-step-4" class="hidden mb-3 flex justify-center">
-                            <span class="inline-block bg-[#ffeb54] border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                            <span class="inline-block bg-white border-2 border-black text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
                                 ステップ4：AIが文章作成
                             </span>
                         </div>
                         <button id="demo-button"
-                            class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            class="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                             <span id="demo-button-text">AI返信を生成</span>
                         </button>
                     </div>
 
                     <!-- ローディング -->
                     <div id="demo-loading" class="hidden">
-                        <div class="bg-[#ffeb54]/20 border-2 border-black rounded-xl p-6 text-center">
+                        <div class="bg-white border-2 border-black rounded-xl p-6 text-center">
                             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white mb-3">
-                                <div class="w-8 h-8 border-4 border-[#ffeb54] border-t-black rounded-full animate-spin"></div>
+                                <div class="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
                             </div>
                             <p class="text-black font-semibold">AI が返信文を生成中...</p>
                         </div>
@@ -874,9 +770,9 @@
 
                     <!-- 結果表示 -->
                     <div id="demo-result" class="hidden">
-                        <div class="bg-[#ffeb54]/10 border-2 border-[#ffeb54] rounded-xl p-6">
+                        <div class="bg-gray-50 border-2 border-black rounded-xl p-6">
                             <h4 class="text-lg font-bold text-black mb-3 flex items-center">
-                                <svg class="w-6 h-6 mr-2 text-[#ffeb54]" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-6 h-6 mr-2 text-black" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
                                 生成された返信文
@@ -892,12 +788,12 @@
                     <div id="demo-used-words" class="hidden">
                         <div class="bg-white border-2 border-black rounded-xl p-6">
                             <h4 class="text-sm font-bold text-black mb-4 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-[#ffeb54]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 使用された単語帳の単語
                             </h4>
-                            <div class="bg-gradient-to-br from-white to-[#ffeb54]/10 border border-[#ffeb54]/30 rounded-xl p-5">
+                            <div class="bg-white border-2 border-black rounded-xl p-5">
                                 <p class="font-bold text-black text-lg mb-2">study</p>
                                 <div class="space-y-1">
                                     <p class="text-sm text-black">・勉強する、研究する</p>
@@ -906,56 +802,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA: AI返信 -->
-    <section class="relative py-24 md:py-32 bg-black overflow-hidden">
-        <!-- Decorative grid pattern -->
-        <div class="absolute inset-0 opacity-[0.03]">
-            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(0deg, #ffffff 0px, #ffffff 1px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 1px, transparent 1px, transparent 60px);"></div>
-        </div>
-
-        <!-- Yellow accent shapes -->
-        <div class="absolute top-1/4 right-0 w-96 h-96 bg-[#ffeb54]/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-80 h-80 bg-[#ffeb54]/10 rounded-full blur-3xl"></div>
-
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div class="inline-block mb-6">
-                <p class="text-sm font-bold tracking-[0.3em] uppercase text-white/50">Put Words Into Practice</p>
-            </div>
-
-            <!-- Large centered headline -->
-            <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-8 leading-tight max-w-4xl mx-auto">
-                学んだ単語を<br>
-                <span class="relative inline-block">
-                    実際に使ってみよう
-                    <span class="absolute bottom-0 left-0 w-full h-3 md:h-4 bg-[#ffeb54] -z-10"></span>
-                </span>
-            </h2>
-
-            <p class="text-lg md:text-2xl text-white/70 mb-16 max-w-3xl mx-auto leading-relaxed">
-                AIがあなたの単語帳から最適な単語を選んで、<br class="hidden md:block">
-                自然な英語の返信文を生成。覚えるだけじゃない、使える英語へ
-            </p>
-
-            <!-- Multi-button CTA -->
-            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <a href="{{ route('register') }}"
-                    class="group relative bg-[#ffeb54] hover:bg-[#ffeb54]/90 text-black px-14 py-6 rounded-full text-lg md:text-xl font-black transition-all duration-300 transform hover:scale-105 shadow-[0_0_40px_rgba(255,235,84,0.3)] hover:shadow-[0_0_60px_rgba(255,235,84,0.5)]">
-                    <span class="relative z-10">無料で始める</span>
-                    <span class="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-300"></span>
-                </a>
-
-                <div class="flex items-center gap-4 text-white/60">
-                    <div class="flex -space-x-2">
-                        <div class="w-10 h-10 rounded-full bg-[#ffeb54] border-2 border-black"></div>
-                        <div class="w-10 h-10 rounded-full bg-white border-2 border-black"></div>
-                        <div class="w-10 h-10 rounded-full bg-[#ffeb54] border-2 border-black"></div>
-                    </div>
-                    <p class="text-sm font-medium">20単語まで完全無料</p>
                 </div>
             </div>
         </div>
@@ -990,7 +836,7 @@
     </section>
 
     <!-- プラン・価格表セクション -->
-    <section id="pricing" class="py-20 bg-yellow">
+    <section id="pricing" class="py-20 bg-white border-t border-black/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">
@@ -1002,7 +848,7 @@
                 @foreach($plans as $plan)
                 <div class="bg-white p-8 rounded-3xl border-2 border-black transition-all duration-300 {{ $plan['type'] === 'basic' ? 'scale-105 shadow-2xl' : '' }}">
                     @if($plan['type'] === 'basic')
-                    <div class="inline-block px-3 py-1 bg-yellow rounded-full text-xs font-bold text-black mb-4">
+                    <div class="inline-block px-3 py-1 bg-black rounded-full text-xs font-bold text-white mb-4">
                         おすすめ
                     </div>
                     @endif
@@ -1060,17 +906,17 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
                 <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-yellow flex items-center justify-center text-2xl font-bold text-black">1</div>
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-black flex items-center justify-center text-2xl font-bold text-white">1</div>
                     <h3 class="text-xl font-bold mb-3">無料で新規登録</h3>
                     <p class="text-gray-600 leading-relaxed">メールアドレスとパスワードだけで、30秒で登録完了</p>
                 </div>
                 <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-yellow flex items-center justify-center text-2xl font-bold text-black">2</div>
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-black flex items-center justify-center text-2xl font-bold text-white">2</div>
                     <h3 class="text-xl font-bold mb-3">単語を登録</h3>
                     <p class="text-gray-600 leading-relaxed">英単語を入力すると、AIが自動で発音・意味を補完</p>
                 </div>
                 <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-yellow flex items-center justify-center text-2xl font-bold text-black">3</div>
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-black flex items-center justify-center text-2xl font-bold text-white">3</div>
                     <h3 class="text-xl font-bold mb-3">テスト・返信で活用</h3>
                     <p class="text-gray-600 leading-relaxed">単語テストで定着を確認、返信アシスタントで実践</p>
                 </div>
@@ -1079,7 +925,7 @@
     </section>
 
     <!-- ユーザーの声セクション -->
-    <section class="py-20 bg-yellow">
+    <section class="py-20 bg-white border-t border-black/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">
@@ -1167,7 +1013,7 @@
                 30秒で登録完了。
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <a href="{{ route('register') }}" class="btn-primary px-12 py-4 rounded-full text-lg font-bold">
+                <a href="{{ route('register') }}" class="bg-white text-black hover:bg-gray-200 px-12 py-4 rounded-full text-lg font-bold transition">
                     無料で始める
                 </a>
                 <a href="#pricing" class="bg-transparent border-2 border-white text-white px-12 py-4 rounded-full text-lg font-bold hover:bg-white hover:text-black transition">
@@ -1175,8 +1021,27 @@
                 </a>
             </div>
             <p class="text-sm text-gray-400">
-                すでにアカウントをお持ちですか？ <a href="{{ route('login') }}" class="text-yellow font-medium hover:underline">ログイン</a>
+                すでにアカウントをお持ちですか？ <a href="{{ route('login') }}" class="text-white font-bold underline">ログイン</a>
             </p>
+        </div>
+    </section>
+
+    <!-- ⑦ 追伸 -->
+    <section class="py-20 bg-white">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="hand-label">p.s.</span>
+            <div class="sketch-card p-8 md:p-12 mt-4 text-left" style="transform: rotate(0.5deg);">
+                <p class="leading-loose text-gray-800">
+                    私自身、映画で出会った単語を何度も忘れてきました。<br>
+                    「あのとき出会った単語をぜんぶ覚えていたら、今ごろどれだけ話せただろう」——<br>
+                    そんな悔しさから、このアプリを一人で作りました。<br>
+                    あなたが明日出会う単語は、もう逃がしません。（仮テキスト）
+                </p>
+                <div class="flex items-center justify-end mt-8 gap-3">
+                    <p class="font-bold">— 開発者より</p>
+                    <img src="{{ asset('images/moyashi.jpg') }}" alt="もやしキャラクター" class="w-14" style="mix-blend-mode: multiply; transform: rotate(8deg);">
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1441,7 +1306,7 @@
             step4.classList.add('hidden');
 
             // カテゴリーをリセット
-            categoryFriend.classList.remove('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+            categoryFriend.classList.remove('bg-gray-100', 'border-black', 'opacity-100');
             categoryFriend.classList.add('border-gray-300', 'opacity-50');
             if (friendIcon) {
                 friendIcon.classList.remove('text-black');
@@ -1467,7 +1332,7 @@
 
             // カテゴリー「友人」を選択
             categoryFriend.classList.remove('border-gray-300', 'opacity-50');
-            categoryFriend.classList.add('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+            categoryFriend.classList.add('bg-gray-100', 'border-black', 'opacity-100');
             if (friendIcon) {
                 friendIcon.classList.remove('text-gray-400');
                 friendIcon.classList.add('text-black');
@@ -1581,7 +1446,7 @@
                     if (step3) step3.classList.add('hidden');
                     if (step4) step4.classList.add('hidden');
                     if (categoryFriend) {
-                        categoryFriend.classList.remove('bg-[#ffeb54]/10', 'border-[#ffeb54]', 'opacity-100');
+                        categoryFriend.classList.remove('bg-gray-100', 'border-black', 'opacity-100');
                         categoryFriend.classList.add('border-gray-300', 'opacity-50');
                         const friendIcon = categoryFriend.querySelector('svg');
                         const friendText = categoryFriend.querySelector('span');
@@ -1628,7 +1493,7 @@
                 // 全ての選択肢を無効化
                 document.querySelectorAll('.test-choice').forEach(btn => {
                     btn.disabled = true;
-                    btn.classList.remove('hover:bg-[#ffeb54]/10', 'hover:border-[#ffeb54]', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
+                    btn.classList.remove('hover:bg-gray-100', 'hover:border-black', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
                 });
 
                 if (isCorrect) {
@@ -1689,7 +1554,7 @@
             document.querySelectorAll('.test-choice').forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50');
-                btn.classList.add('border-black', 'hover:bg-[#ffeb54]/10', 'hover:border-[#ffeb54]', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
+                btn.classList.add('border-black', 'hover:bg-gray-100', 'hover:border-black', 'hover:shadow-soft-lg', 'transform', 'hover:-translate-y-0.5');
 
                 const label = btn.querySelector('.choice-label');
                 label.classList.remove('bg-red-500', 'bg-green-500', 'text-white');

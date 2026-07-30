@@ -36,7 +36,7 @@
                     <a href="#features" class="text-sm font-medium text-gray-700 hover:text-black transition">機能</a>
                     <a href="#pricing" class="text-sm font-medium text-gray-700 hover:text-black transition">料金</a>
                     <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-black transition">ログイン</a>
-                    <a href="{{ route('register') }}" class="bg-[#ffeb54] hover:bg-[#ffe135] text-black px-6 py-2 rounded-full text-sm font-medium transition">
+                    <a href="{{ route('register') }}" class="bg-black hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm font-medium transition">
                         無料で始める
                     </a>
                 @endauth

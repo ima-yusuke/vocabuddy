@@ -47,9 +47,21 @@
         /* ==============================
            Hero: 動くもやしヒーロー
            ============================== */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            /* 固定ナビ(h-16 = 4rem)を引いた画面いっぱいの高さ */
+            min-height: calc(100vh - 4rem);
+            min-height: calc(100dvh - 4rem);
+            padding-bottom: clamp(1rem, 4vh, 3rem);
+        }
+
         .hero-logo {
             text-align: center;
-            padding-top: 2.5rem;
+            flex: 1 1 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-logo span {
@@ -76,6 +88,7 @@
         .hero-stage {
             position: relative;
             height: clamp(230px, 34vw, 380px);
+            width: 100%;
             max-width: 80rem;
             margin: 0.5rem auto 0;
         }
@@ -285,7 +298,7 @@
     </svg>
 
     <!-- ヒーローセクション -->
-    <section class="bg-white overflow-hidden pb-10">
+    <section class="hero-section bg-white overflow-hidden">
         <h1 class="hero-logo" aria-label="VocaBuddy">
             <span style="--i:0">V</span><span style="--i:1">o</span><span style="--i:2">c</span><span style="--i:3">a</span><span style="--i:4">B</span><span style="--i:5">u</span><span style="--i:6">d</span><span style="--i:7">d</span><span style="--i:8">y</span>
         </h1>

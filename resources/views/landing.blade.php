@@ -1687,15 +1687,32 @@
         }
 
         // ====================================
-        // ヒーロー: タッチ端末では タップで跳ねる+吹き出し
+        // ヒーロー: 吹き出しは自動で順番に表示 + ホバー/タップでも表示
         // ====================================
-        document.querySelectorAll('.mo').forEach(mo => {
-            mo.addEventListener('touchstart', () => {
-                mo.classList.add('play');
-                clearTimeout(mo._playTimer);
-                mo._playTimer = setTimeout(() => mo.classList.remove('play'), 1400);
-            }, { passive: true });
+        const heroMos = Array.from(document.querySelectorAll('.mo'));
+
+        function playMo(mo, duration = 1400) {
+            mo.classList.add('play');
+            clearTimeout(mo._playTimer);
+            mo._playTimer = setTimeout(() => mo.classList.remove('play'), duration);
+        }
+
+        // タッチ端末: タップで跳ねる+吹き出し
+        heroMos.forEach(mo => {
+            mo.addEventListener('touchstart', () => playMo(mo), { passive: true });
         });
+
+        // 自動巡回: 左から順番に1体ずつ吹き出しを出す（reduced-motion時は無効）
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            let heroMoIndex = 0;
+            setInterval(() => {
+                // スマホで非表示のキャラはスキップ
+                const visibleMos = heroMos.filter(mo => mo.offsetParent !== null);
+                if (visibleMos.length === 0) return;
+                playMo(visibleMos[heroMoIndex % visibleMos.length], 1800);
+                heroMoIndex++;
+            }, 2600);
+        }
     </script>
 </body>
 </html>

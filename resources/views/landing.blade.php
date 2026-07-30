@@ -63,7 +63,7 @@
         }
 
         .hero-logo-gap {
-            margin-left: clamp(1rem, 3.5vw, 2.5rem);
+            margin-left: clamp(0.5rem, 1.5vw, 1.25rem);
         }
 
         .hero-logo span {

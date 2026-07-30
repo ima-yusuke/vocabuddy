@@ -1705,13 +1705,15 @@
         // 自動巡回: 左から順番に1体ずつ吹き出しを出す（reduced-motion時は無効）
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             let heroMoIndex = 0;
-            setInterval(() => {
+            const cycleMo = () => {
                 // スマホで非表示のキャラはスキップ
                 const visibleMos = heroMos.filter(mo => mo.offsetParent !== null);
                 if (visibleMos.length === 0) return;
-                playMo(visibleMos[heroMoIndex % visibleMos.length], 1800);
+                playMo(visibleMos[heroMoIndex % visibleMos.length]);
                 heroMoIndex++;
-            }, 2600);
+            };
+            cycleMo(); // 待ち時間なしで1体目から開始
+            setInterval(cycleMo, 1500);
         }
     </script>
 </body>

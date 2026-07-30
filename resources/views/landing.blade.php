@@ -62,6 +62,10 @@
             margin-bottom: clamp(1rem, 4vh, 3rem);
         }
 
+        .hero-logo-gap {
+            margin-left: clamp(1rem, 3.5vw, 2.5rem);
+        }
+
         .hero-logo span {
             display: inline-block;
             font-weight: 900;
@@ -299,7 +303,7 @@
     <section class="hero-section bg-white overflow-hidden">
         <h1 class="hero-logo" aria-label="JOIN US!">
             <span style="--i:0">J</span><span style="--i:1">O</span><span style="--i:2">I</span><span style="--i:3">N</span>
-            <span style="--i:4">U</span><span style="--i:5">S</span><span style="--i:6">!</span>
+            <span style="--i:4" class="hero-logo-gap">U</span><span style="--i:5">S</span><span style="--i:6">!</span>
         </h1>
 
         <div class="hero-stage">
